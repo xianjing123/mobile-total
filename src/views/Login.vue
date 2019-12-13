@@ -1,0 +1,34 @@
+<template>
+    <div class="login">
+        <button @click="LoginTo">登录</button>
+    </div>
+</template>
+
+<script>
+import {setCookie} from '../components/cookie'
+export default {
+    mounted(){
+        this.$store.commit("commitShow",false)
+    },
+    destroyed(){
+        this.$store.commit("commitShow",true)
+    },
+    methods:{
+        LoginTo () {
+            setCookie("name","测试","/",1)
+            this.$router.push("/home")
+        }
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+    .login{
+        background:blue;
+        button{
+            width:0.5rem;
+            height:0.5rem;
+            line-height: 0.5rem;
+        }
+    }
+</style>
