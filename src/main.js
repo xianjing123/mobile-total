@@ -3,6 +3,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import * as dd from 'dingtalk-jsapi'
+import MintUI from 'mint-ui'
+import 'mint-ui/lib/style.css'
+import './assets/css/Allmint.css'
+
+Vue.use(MintUI)
 
 Vue.config.productionTip = false
 

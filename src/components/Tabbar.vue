@@ -22,29 +22,29 @@
 <style lang="scss" scoped>
 .tabbar {
   width: 100%;
-  height: 0.52rem;
+  height: 1.04rem;
   background: white;
   position: fixed;
   bottom: 0;
   left: 0;
   display: flex;
   justify-content: space-around;
-  font-size: 0.1rem;
+  font-size: 0.2rem;
   font-family: PingFang SC;
   font-weight: 400;
   .iconfont{
     display:block;
-    width:0.24rem;
-    height:0.24rem;
-    font-size:0.24rem;
+    width:0.48rem;
+    height:0.48rem;
+    font-size:0.48rem;
     border: 1px solid rgba(236, 236, 236, 1);
     position:relative;
     left:50%;
     transform:translateX(-50%);
-    margin-top:0.05rem;
+    margin-top:0.1rem;
   }
   .icon-task{
-    font-size:0.2rem;
+    font-size:0.4rem;
   }
 }
 .active {
