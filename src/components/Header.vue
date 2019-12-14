@@ -13,7 +13,7 @@
 export default {
   methods: {
     historyGo() {
-      console.log(this.$router.go(-1));
+      this.$router.go(-1)
     }
   }
 };

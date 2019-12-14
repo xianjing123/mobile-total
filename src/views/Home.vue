@@ -4,10 +4,10 @@
     <div id="viewDiv" ref="map"></div>
     <div class="sliderbar">
       <div class="slider" @click="monitorType">
-        <img src="/imgs/map-type.png" alt="">
+        <img src="/imgs/map-type.png" alt />
       </div>
-      <div class="slider">
-        <img src="/imgs/report.png" alt="">
+      <div class="slider" @click="monitorReport">
+        <img src="/imgs/report.png" alt />
       </div>
     </div>
     <mt-popup v-model="popupVisible" position="right" class="monitor-popup">
@@ -66,6 +66,9 @@ export default {
     },
     mapActiveClick(index) {
       this.mapActiveIndex = index;
+    },
+    monitorReport() {
+      this.$router.push('/home/report')
     }
   },
   mounted() {
@@ -114,8 +117,8 @@ export default {
   right: 0.2rem;
   top: 1rem;
   .slider {
-    img{
-      width:1.5rem;
+    img {
+      width: 1.5rem;
     }
   }
 }
