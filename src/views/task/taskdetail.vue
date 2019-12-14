@@ -1,16 +1,23 @@
 <template>
   <div>
-    <Header>掌上市政平台</Header>
+    <Header>任务名称</Header>
     <div id="viewDiv" ref="map"></div>
   </div>
 </template>
- 
+
 <script>
-import Header from "../components/Header";
+import Header from "../../components/Header";
 import esriLoader from "esri-loader";
 export default {
+  data() {
+    return {};
+  },
+  components: {
+    Header
+  },
   mounted() {
     var options = { url: "https://js.arcgis.com/4.13/" };
+    this.$store.commit("commitShow", false);
     esriLoader
       .loadModules(
         [
@@ -36,15 +43,15 @@ export default {
         console.error(err);
       });
   },
-  components: {
-    Header
+  destroyed() {
+    this.$store.commit("commitShow", true);
   }
 };
 </script>
-<style scoped>
-@import url("https://js.arcgis.com/4.13/esri/css/main.css");
+
+<style lang="scss" scoped>
 #viewDiv {
-  height: calc(100vh - 1.84rem);
+  height: calc(100vh - 0.8rem);
   width: 100%;
 }
 </style>

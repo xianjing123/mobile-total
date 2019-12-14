@@ -6,6 +6,7 @@ import Special from '../views/Special'
 import Mine from '../views/Mine'
 import Login from '../views/Login'
 import { getCookie } from '../components/cookie'
+import taskdetail from '../views/task/taskdetail'
 
 Vue.use(VueRouter)
 
@@ -42,6 +43,14 @@ const routes = [
   {
     path: '*',
     redirect: '/home'
+  },
+  {
+    path: '/taskdetail/:id',
+    name: 'home',
+    meta: {
+      title: '任务名称'
+    },
+    component: taskdetail
   }
 ]
 
@@ -54,9 +63,9 @@ router.beforeEach((to, from, next) => {
   if (to.path === "/login") {
     next()
   } else {
-    if(getCookie("name")){
+    if (getCookie("name")) {
       next()
-    }else{
+    } else {
       next("/login")
     }
   }

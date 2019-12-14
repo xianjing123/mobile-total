@@ -45,10 +45,10 @@ td {
   padding: 0;
 }
 #app {
-  margin-bottom: 0.52rem;
+  margin-bottom: 1.04rem;
 }
 body {
-  font-size: 0.16rem;
+  font-size: 0.32rem;
 }
 html,
 body {
