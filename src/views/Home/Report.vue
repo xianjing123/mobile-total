@@ -28,8 +28,8 @@ export default {
     };
   },
   methods:{
-      ReportTo (data) {
-        this.$router.push('/home/report/map')
+      ReportTo (name) {
+        this.$router.push(`/home/report/map?name=${name}`)
       }
   },
   components: {
