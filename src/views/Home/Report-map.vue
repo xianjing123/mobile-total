@@ -23,8 +23,8 @@ export default {
 		}
 	},
   mounted() {
-    this.name = this.$route.query.name
     this.$store.commit("commitShow", false);
+    this.name = this.$route.query.name
     point()
   },
   destroyed() {
