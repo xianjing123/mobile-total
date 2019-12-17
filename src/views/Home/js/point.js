@@ -1,68 +1,71 @@
 import esriLoader from "esri-loader";
 import map from './map'
 function point() {
-    var esri = map()
-    esri.then(res => {
-        var map = res.map;
-        var view = res.view
-        console.log(map, view)
-        var options = { url: "https://js.arcgis.com/4.13/" };
-        esriLoader.loadModules(
-            [
-                "esri/layers/GraphicsLayer",
-                "esri/Graphic"
-            ],
-            options
-        ).then(([GraphicsLayer, Graphic]) => {
-            var graphicsLayer = new GraphicsLayer();
-            map.add(graphicsLayer);
-            var point = {
-                type: "point", // autocasts as new Point()
-                x: 119.91766644773796,
-                y: 30.54593674831524
-            };
+  var esri = map()
+  esri.then(res => {
+    var map = res.map;
+    var view = res.view
+    var options = { url: "https://js.arcgis.com/4.13/" };
+    esriLoader.loadModules(
+      [
+        "esri/layers/GraphicsLayer",
+        "esri/Graphic"
+      ],
+      options
+    ).then(([GraphicsLayer, Graphic]) => {
+      var graphicsLayer = new GraphicsLayer();
+      map.add(graphicsLayer);
+      var point = {
+        type: "point", // autocasts as new Point()
+        x: 119.91766644773796,
+        y: 30.54593674831524
+      };
 
-            var markerSymbol = {
-                type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
-                color: [38, 168, 162],
-                outline: {
-                    // autocasts as new SimpleLineSymbol()
-                    color: [255, 255, 255],
-                    width: 2
-                }
-            };
+      var markerSymbol = {
+        type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+        color: [38, 168, 162],
+        outline: {
+          // autocasts as new SimpleLineSymbol()
+          color: [255, 255, 255],
+          width: 2
+        }
+      };
 
-            var pointGraphic = new Graphic({
-                geometry: point,
-                symbol: markerSymbol,
-                attributes: {
-                    title: '正常设备',
-                    EquipmentNumber: 'JG002',
-                    HoleNumber: 'JG002',
-                    Company: '德清市政',
-                    Manufacturer: '浙江正元地理信息有限责任公司',
-                    Installer: '浙江正元地理信息有限责任公司',
-                    date: '2019/01/01',
-                    state: '正常'
-                }
-            });
-            graphicsLayer.add(pointGraphic);
-            view.on('click', e => {
-                view.hitTest(e).then(res => {
-                    const graphic = res.results[0].graphic
-                    // view.popup.open({
-                    //     location: graphic.geometry,
-                    //     content: report(graphic)
-                    // });
-                    console.log(graphic)
-                })
-            })
+      var pointGraphic = new Graphic({
+        geometry: point,
+        symbol: markerSymbol,
+        attributes: {
+          title: '正常设备',
+          EquipmentNumber: 'JG002',
+          HoleNumber: 'JG002',
+          Company: '德清市政',
+          Manufacturer: '浙江正元地理信息有限责任公司',
+          Installer: '浙江正元地理信息有限责任公司',
+          date: '2019/01/01',
+          state: '正常'
+        }
+      });
+      graphicsLayer.add(pointGraphic);
+      view.on('hold', e => {
+        view.hitTest(e).then(res => {
+          const graphic = res.results[0].graphic
+          var a = view.popup.open({
+            location: graphic.geometry,
+            content: report(graphic),
+          });
+          console.log(a)
         })
+        // view.popup.open({
+        //   title: "hahha",
+        //   content: "aaaaaaaaa"  // content displayed in the popup
+        // });
+      })
     })
+  })
 }
 
 function report(graphic) {
-    return `<div id="mydiv">
+  return `<div id="mydiv">
     <div id="h1" style="background:linear-gradient(-90deg,rgba(176,225,241,1) 0%,rgba(15,156,149,1) 100%)">
       <span id="title">${graphic.attributes['title']}</span>
     </div>
@@ -111,5 +114,5 @@ function report(graphic) {
   </div>`
 }
 export {
-    point
+  point
 }

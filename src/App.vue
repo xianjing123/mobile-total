@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :style="'margin-bottom:'+Margin">
     <div></div>
     <Tabbar v-if="$store.state.isShow" />
     <router-view />
@@ -9,6 +9,15 @@
 <script>
 import Tabbar from "./components/Tabbar";
 export default {
+  computed:{
+    Margin () {
+      if(this.$store.state.isShow){
+        return "1.04rem"
+      }else{
+        return "0"
+      }
+    }
+  },
   components: {
     Tabbar
   }
@@ -43,9 +52,6 @@ th,
 td {
   margin: 0;
   padding: 0;
-}
-#app {
-  margin-bottom: 1.04rem;
 }
 body {
   font-size: 0.32rem;
