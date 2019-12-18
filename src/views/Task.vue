@@ -28,7 +28,21 @@
             class="task_list"
             :key="index"
             v-for="(n,index) in tesklist"
-            :right="content"
+            :right="[{
+              content:'巡检上报',
+              style:{
+                background:'#F25643',color: '#fff',width: '1.8rem',height: '1.45rem',linehright: '1.45rem',
+              },
+              handler: () => deleteSection(n.id)
+            },
+            {
+              content:'任务详情',
+              style:{
+                background:'#3296FA',color: '#fff',width: '1.8rem',height: '1.45rem',linehright: '1.45rem',
+              },
+              handler: () => deleteSection1(n.id)
+            }
+            ]"
             id="task"
           >
             <img :src="n.img" alt />
@@ -56,30 +70,6 @@ export default {
   data() {
     return {
       selected: "1",
-      content: [
-        {
-          content: "巡检上报",
-          style: {
-            background: "#F25643",
-            color: "#fff",
-            width: "1.8rem",
-            height: "1.45rem",
-            linehright: "1.45rem"
-          },
-          handler: () => deleteSection(index)
-        },
-        {
-          content: "任务详情",
-          style: {
-            background: "#3296FA",
-            color: "#fff",
-            width: "1.8rem",
-            height: "1.45rem",
-            linehright: "1.45rem"
-          },
-          handler: () => deleteSection(index)
-        }
-      ],
       contentKey: 2,
       tesklist: [
         {
@@ -135,8 +125,13 @@ export default {
     this.contentKey = 3;
   },
   methods: {
-    deleteSection(index) {
-      console.log(index);
+    deleteSection(id) {
+      this.$router.push({ path: "/doingdetail/" + id });
+      // console.log(index);
+    },
+    deleteSection1(id) {
+      this.$router.push({ path: "/waydetail/" + id });
+      // console.log(index);
     },
     gotoDetails(id) {
       this.$router.push({ path: "/taskdetail/" + id });

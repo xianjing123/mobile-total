@@ -25,32 +25,28 @@
           <input type="text" class="inp_origin" value="一路一档信息管理系统" />
         </div>
         <div class="top_des_04">
-          <span class="des_name">案件等级</span>
+          <span class="des_name">巡检周期</span>
           <div class="show_pup" @click="showpup()">
             <input type="text" class="inp_pup" v-model="message" />
           </div>
         </div>
-        <div class="top_des_05">
-          <span class="des_name">案件描述</span>
-          <textarea width="100%" class="inp_des"></textarea>
-          <!-- <input type="textarea" class="inp_des" /> -->
-        </div>
-        <div class="top_des_05" style="margin-top:.15rem">
-          <span class="des_name">处理意见</span>
-          <textarea width="100%" class="inp_des"></textarea>
-          <!-- <input type="textarea" class="inp_des" /> -->
-        </div>
-        <div class="top_des_05" style="margin-top:.15rem">
-          <span class="des_name">附件</span>
-          <div class="des_img">
-            <img src alt />
+        <div class="top_des_04">
+          <span class="des_name">开始日期</span>
+          <div class="show_pup" @click="this.openPicker">
+            <input type="text" class="inp_pup" v-model="message1" />
           </div>
-          <!-- <input type="textarea" class="inp_des" /> -->
         </div>
-        <div class="btn">
+        <div class="top_des_04">
+          <span class="des_name">开始日期</span>
+          <div class="show_pup" @click="this.openPicker1">
+            <input type="text" class="inp_pup" v-model="message2" />
+          </div>
+        </div>
+        <div class="kong"></div>
+        <!-- <div class="btn">
           <button class="btn1">接单</button>
           <button class="btn2">取消</button>
-        </div>
+        </div>-->
       </div>
     </div>
     <mt-popup
@@ -67,6 +63,20 @@
         </div>
       </mt-picker>
     </mt-popup>
+    <mt-datetime-picker
+      ref="pickerStartTime"
+      type="datetime"
+      v-model="pickerValueStartTime"
+      @confirm="this.handleConfirmStartTime"
+      class="timedate"
+    ></mt-datetime-picker>
+    <mt-datetime-picker
+      ref="pickerStartTime1"
+      type="datetime"
+      v-model="pickerValueStartTime1"
+      @confirm="this.handleConfirmStartTime1"
+      class="timedate"
+    ></mt-datetime-picker>
   </div>
 </template>
 
@@ -78,7 +88,11 @@ export default {
     return {
       popupVisible: false,
       message: "请选择代理区域",
+      message1: new Date().toLocaleString("chinese", { hour12: false }),
+      message2: new Date().toLocaleString("chinese", { hour12: false }),
       showToolbar: true,
+      pickerValueStartTime: "",
+      pickerValueStartTime1: "",
       slots: [
         {
           values: ["城市选择", "苏州", "常州", "杭州", "湖州", "上海", "南京"]
@@ -90,6 +104,7 @@ export default {
     Header
   },
   mounted() {
+    //arcgis地图服务
     var options = { url: "https://js.arcgis.com/4.13/" };
     this.$store.commit("commitShow", false);
     esriLoader
@@ -136,7 +151,28 @@ export default {
         console.error(err);
       });
   },
+
   methods: {
+    //日期时间选择器
+    openPicker() {
+      this.$refs.pickerStartTime.open();
+    },
+    openPicker1() {
+      this.$refs.pickerStartTime1.open();
+    },
+    handleConfirmStartTime() {
+      var timedate = this.pickerValueStartTime.toLocaleString("chinese", {
+        hour12: false
+      });
+      this.message1 = timedate;
+    },
+    handleConfirmStartTime1() {
+      var timedate1 = this.pickerValueStartTime1.toLocaleString("chinese", {
+        hour12: false
+      });
+      this.message2 = timedate1;
+    },
+    //选择器
     onValuesChange(picker, values) {
       this.message = values;
       if (values[0] > values[1]) {
@@ -146,6 +182,10 @@ export default {
     showpup() {
       this.popupVisible = true;
     }
+
+    // showdate() {
+    //   this.pickerValue = true;
+    // }
   },
   destroyed() {
     this.$store.commit("commitShow", true);
@@ -323,38 +363,7 @@ export default {
           }
         }
       }
-      .top_des_05 {
-        width: 100%;
-        height: 1.6rem;
-        position: relative;
-        .des_name {
-          font-size: 0.24rem;
-          position: absolute;
-          top: 0.1rem;
-          left: 0.32rem;
-        }
-        .inp_des {
-          width: calc(76% - 0.1rem);
-          height: 1.4rem;
-          position: absolute;
-          top: 0.01rem;
-          right: 0.32rem;
-          padding: 0.05rem;
-          border-radius: 0.12rem;
-          border: 0.01rem solid #eee;
-          color: rgba(112, 112, 112, 1);
-        }
-        .des_img {
-          width: 1rem;
-          height: 1rem;
-          position: absolute;
-          top: 0.01rem;
-          left: 1.48rem;
-          border-radius: 0.12rem;
-          border: 0.01rem solid #eee;
-          color: rgba(112, 112, 112, 1);
-        }
-      }
+
       .btn {
         width: 100%;
         height: 0.6rem;
@@ -377,6 +386,12 @@ export default {
           border-radius: 0.06rem;
           margin-left: 10%;
         }
+      }
+      .kong {
+        width: 90%;
+        height: 0.2rem;
+        border-bottom: 0.01rem solid #eee;
+        margin-left: 5%;
       }
     }
   }

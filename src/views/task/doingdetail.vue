@@ -7,7 +7,7 @@
         <img src="/imgs/logo.jpg" alt />
         <span class="top_tit">管道问题</span>
         <span class="top_adress">浙江省湖州市德清县科园路</span>
-        <span class="nav">导航</span>
+        <span class="nav">更改位置</span>
       </div>
       <div class="top_des">
         <div class="top_des_01">
@@ -20,7 +20,7 @@
           <input type="text" class="inp_name" value="张三" />
           <input type="text" class="inp_date" value="2019/10/22 12:41:20" />
         </div>
-        <div class="top_des_03">
+        <!-- <div class="top_des_03">
           <span class="des_name">任务来源</span>
           <input type="text" class="inp_origin" value="一路一档信息管理系统" />
         </div>
@@ -32,28 +32,28 @@
         </div>
         <div class="top_des_05">
           <span class="des_name">案件描述</span>
-          <textarea width="100%" class="inp_des"></textarea>
-          <!-- <input type="textarea" class="inp_des" /> -->
-        </div>
+        <textarea width="100%" class="inp_des"></textarea>-->
+        <!-- <input type="textarea" class="inp_des" /> -->
+        <!-- </div>
         <div class="top_des_05" style="margin-top:.15rem">
           <span class="des_name">处理意见</span>
-          <textarea width="100%" class="inp_des"></textarea>
-          <!-- <input type="textarea" class="inp_des" /> -->
-        </div>
+        <textarea width="100%" class="inp_des"></textarea>-->
+        <!-- <input type="textarea" class="inp_des" /> -->
+        <!-- </div>
         <div class="top_des_05" style="margin-top:.15rem">
           <span class="des_name">附件</span>
           <div class="des_img">
             <img src alt />
-          </div>
-          <!-- <input type="textarea" class="inp_des" /> -->
-        </div>
+        </div>-->
+        <!-- <input type="textarea" class="inp_des" /> -->
+        <!-- </div> -->
         <div class="btn">
-          <button class="btn1">接单</button>
-          <button class="btn2">取消</button>
+          <button class="btn1">立即上报</button>
+          <!-- <button class="btn2">取消</button> -->
         </div>
       </div>
     </div>
-    <mt-popup
+    <!-- <mt-popup
       v-model="popupVisible"
       popup-transition="popup-fade"
       closeOnClickModal="true"
@@ -66,7 +66,7 @@
           <span class="usi-btn-sure" @click="popupVisible = !popupVisible">确定</span>
         </div>
       </mt-picker>
-    </mt-popup>
+    </mt-popup>-->
   </div>
 </template>
 
@@ -166,7 +166,7 @@ export default {
     width: 100%;
     height: 12.6rem;
     position: fixed;
-    bottom: 0rem;
+    bottom: -6.5rem;
     left: 0;
     background-color: #fff;
     .task_top {
@@ -357,16 +357,16 @@ export default {
       }
       .btn {
         width: 100%;
-        height: 0.6rem;
-
+        height: 1rem;
+        margin-top: 0.2rem;
         .btn1 {
-          width: 1.28rem;
-          height: 0.6rem;
+          width: 80%;
+          height: 0.8rem;
           background-color: rgba(50, 150, 250, 1);
           color: #fff;
           border: none;
           border-radius: 0.06rem;
-          margin-left: 28%;
+          margin-left: 10%;
         }
         .btn2 {
           width: 1.28rem;
