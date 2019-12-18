@@ -39,13 +39,7 @@
         </div>
       </div>
     </mt-popup>
-    <div ref="chatBox" class="chat">
-      <div class="chat-box">
-        <span>{{name}}</span>
-        <span @click="navigation">导航</span>
-        <p @click="determine">详情</p>
-      </div>
-    </div>
+    <Modal ref="modal" :name="name" @navigation="navigationShow($event)"></Modal>
     <div class="navigation">
       <mt-actionsheet :actions="actions" v-model="sheetVisible"></mt-actionsheet>
     </div>
@@ -54,13 +48,15 @@
  
 <script>
 import Header from "../components/Header";
-import { point } from "./Home/js/point";
+import Modal from "./Home/Modal";
+import { normalStation } from "./Home/js/point";
 export default {
   data() {
     return {
-      name: "xxx监测点", //弹出层标题
+      name: "xxx监测点", //标题
       popupVisible: false, //侧边栏是否显示
       mapActive: false, //地图类型active
+      sheetVisible:false, //导航栏是否显示 
       datalist: [
         { name: "泵站", imgs: "/imgs/pumping.png" },
         { name: "雨污混排", imgs: "/imgs/sewage.png" },
@@ -68,7 +64,6 @@ export default {
         { name: "井盖", imgs: "/imgs/manhole.png" }
       ], //侧边栏内容
       mapActiveIndex: 0, //监测点active
-      sheetVisible: false, //导航状态
       actions: [
         {
           name: "百度地图",
@@ -94,25 +89,21 @@ export default {
     mapActiveClick(index) {
       this.mapActiveIndex = index;
     },
-    //地图点点击
-    determine() {
-      this.$refs.chatBox.style.display = "none";
-      this.$router.push(`/home/detail?name=${this.name}`);
-    },
     //上传
     monitorReport() {
       this.$router.push("/home/report");
     },
-    //导航栏
-    navigation() {
-      this.sheetVisible = true;
+    //导航栏显示
+    navigationShow(evt) {
+      this.sheetVisible = evt
     }
   },
   mounted() {
-    point(this.$refs.chatBox);
+    normalStation(this.$refs.modal.$el);
   },
   components: {
-    Header
+    Header,
+    Modal
   }
 };
 </script>
@@ -201,33 +192,6 @@ export default {
       .map-active {
         bottom: 0.5rem;
       }
-    }
-  }
-}
-.chat {
-  display: none;
-  position: absolute;
-  width: 5.5rem;
-  .chat-box {
-    width: 100%;
-    height: 0.8rem;
-    background: url("/imgs/chat-box.png") no-repeat;
-    background-size: cover;
-    display: flex;
-    line-height: 0.8rem;
-    padding-left: 0.4rem;
-    font-size: 0.28rem;
-    position: relative;
-    p {
-      height: 0.4rem;
-      position: absolute;
-      right: 0.4rem;
-      top: 0.2rem;
-      padding-left: 0.2rem;
-      line-height: 0.4rem;
-      border-left: 1px solid black;
-      color: RGBA(50, 150, 250, 1);
-      font-weight: bold;
     }
   }
 }
