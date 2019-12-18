@@ -45,8 +45,8 @@ import { point } from "./js/point";
 export default {
   data() {
     return {
-      name: "",
-      area: "在地图确定问题位置",
+      name: "", //标题
+      area: "在地图确定问题位置", //地图点弹出层内容
       listShow: true, //管线描述提交
       sheetVisible: false, //立即上传-状态
       actions: [
@@ -62,19 +62,22 @@ export default {
             console.log("上传图片");
           }
         }
-      ]
+      ] //导航栏内容
     };
   },
   methods: {
+    //地图点点击
     determine() {
       this.listShow = false;
       this.area = "浙江省湖州市德清县科源路辅路";
       this.$refs.chatBox.style.display = "none";
     },
+    //地图点内容隐藏
     reportPut() {
       this.listShow = true;
       this.area = "在地图确定问题位置";
     },
+    //立即上传
     actionSheet() {
       this.sheetVisible = true;
     }
@@ -82,6 +85,7 @@ export default {
   mounted() {
     this.$store.commit("commitShow", false);
     this.name = this.$route.query.name;
+    //地图点
     point(this.$refs.chatBox);
   },
   destroyed() {
@@ -94,6 +98,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import url("../../assets/css/map.css");
 #viewDiv {
   position: absolute;
   top: 0.8rem;

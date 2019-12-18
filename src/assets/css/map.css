@@ -1,0 +1,4 @@
+.esri-view .esri-view-surface--inset-outline:focus::after {
+    content:'';
+    outline:none;
+}

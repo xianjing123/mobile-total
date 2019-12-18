@@ -24,10 +24,11 @@ export default {
         { name: "积水", imgs: "/imgs/report-rain.png" },
         { name: "井盖", imgs: "/imgs/report-manhole.png" },
         { name: "雨污混排", imgs: "/imgs/report-pumping.png" }
-      ]
+      ] //路由导航
     };
   },
   methods:{
+      //跳转上报
       ReportTo (name) {
         this.$router.push(`/home/report/map?name=${name}`)
       }

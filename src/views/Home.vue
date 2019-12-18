@@ -11,7 +11,7 @@
       </div>
     </div>
     <mt-popup v-model="popupVisible" position="right" class="monitor-popup">
-      <MonitorPopup>地图类型</MonitorPopup>
+      <div class="monitor-content">地图类型</div>
       <div class="map-type">
         <div class="map-photo" :class="mapActive?'active':''" @click="()=>{mapActive=true}">
           <img src="/imgs/line.png" alt />
@@ -24,7 +24,7 @@
           <span>道路</span>
         </div>
       </div>
-      <MonitorPopup>监测点</MonitorPopup>
+      <div class="monitor-content">监测点</div>
       <div class="map-type map-monitor">
         <div
           class="map-photo"
@@ -54,64 +54,71 @@
  
 <script>
 import Header from "../components/Header";
-import MonitorPopup from "./Home/Monitor-popup";
 import { point } from "./Home/js/point";
 export default {
   data() {
     return {
-      name:'xxx监测点',
-      popupVisible: false,
-      mapActive: false,
+      name: "xxx监测点", //弹出层标题
+      popupVisible: false, //侧边栏是否显示
+      mapActive: false, //地图类型active
       datalist: [
         { name: "泵站", imgs: "/imgs/pumping.png" },
         { name: "雨污混排", imgs: "/imgs/sewage.png" },
         { name: "积水", imgs: "/imgs/rain.png" },
         { name: "井盖", imgs: "/imgs/manhole.png" }
-      ],
-      mapActiveIndex: 0,
+      ], //侧边栏内容
+      mapActiveIndex: 0, //监测点active
       sheetVisible: false, //导航状态
-      actions:[{
-        name:'百度地图',
-        method:function(){
-          console.log('百度地图')
+      actions: [
+        {
+          name: "百度地图",
+          method: function() {
+            console.log("百度地图");
+          }
+        },
+        {
+          name: "高德地图",
+          method: function() {
+            console.log("高德地图");
+          }
         }
-      },{
-        name:'高德地图',
-        method:function(){
-          console.log('高德地图')
-        }
-      }] //导航栏内容
+      ] //导航栏内容
     };
   },
   methods: {
+    //地图类型切换
     monitorType() {
       this.popupVisible = true;
     },
+    //监测点切换
     mapActiveClick(index) {
       this.mapActiveIndex = index;
     },
+    //地图点点击
     determine() {
       this.$refs.chatBox.style.display = "none";
-      this.$router.push(`/home/detail?name=${this.name}`)
+      this.$router.push(`/home/detail?name=${this.name}`);
     },
+    //上传
     monitorReport() {
       this.$router.push("/home/report");
     },
-    navigation () {
-      this.sheetVisible = true
+    //导航栏
+    navigation() {
+      this.sheetVisible = true;
     }
   },
   mounted() {
     point(this.$refs.chatBox);
   },
   components: {
-    Header,
-    MonitorPopup
+    Header
   }
 };
 </script>
 <style lang="scss" scoped>
 @import url("https://js.arcgis.com/4.13/esri/css/main.css");
+@import url("../assets/css/map.css");
 #viewDiv {
   position: absolute;
   top: 0.8rem;
@@ -133,6 +140,17 @@ export default {
   height: calc(100vh - 1.84rem);
   background: white;
   top: 49%;
+  .monitor-content {
+    margin-top: 0.2rem;
+    width: 100%;
+    height: 0.68rem;
+    background: rgba(50, 150, 250, 1);
+    font-size: 0.36rem;
+    color: white;
+    line-height: 0.68rem;
+    padding-left: 0.2rem;
+    box-sizing: border-box;
+  }
   .map-type {
     height: 2.2rem;
     padding-top: 0.4rem;

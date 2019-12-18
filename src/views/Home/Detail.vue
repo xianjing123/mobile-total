@@ -17,8 +17,8 @@ export default {
     data () {
         return {
             title:"",
-            datalist:[],
-            station:[]
+            datalist:[], //第一个表格内容
+            station:[] //第二个表格内容
         }
     },
     mounted () {
