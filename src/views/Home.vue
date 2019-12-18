@@ -39,16 +39,27 @@
         </div>
       </div>
     </mt-popup>
+    <div ref="chatBox" class="chat">
+      <div class="chat-box">
+        <span>{{name}}</span>
+        <span @click="navigation">导航</span>
+        <p @click="determine">详情</p>
+      </div>
+    </div>
+    <div class="navigation">
+      <mt-actionsheet :actions="actions" v-model="sheetVisible"></mt-actionsheet>
+    </div>
   </div>
 </template>
  
 <script>
 import Header from "../components/Header";
 import MonitorPopup from "./Home/Monitor-popup";
-import map from './Home/js/map'
+import { point } from "./Home/js/point";
 export default {
   data() {
     return {
+      name:'xxx监测点',
       popupVisible: false,
       mapActive: false,
       datalist: [
@@ -57,7 +68,19 @@ export default {
         { name: "积水", imgs: "/imgs/rain.png" },
         { name: "井盖", imgs: "/imgs/manhole.png" }
       ],
-      mapActiveIndex: 0
+      mapActiveIndex: 0,
+      sheetVisible: false, //导航状态
+      actions:[{
+        name:'百度地图',
+        method:function(){
+          console.log('百度地图')
+        }
+      },{
+        name:'高德地图',
+        method:function(){
+          console.log('高德地图')
+        }
+      }] //导航栏内容
     };
   },
   methods: {
@@ -67,12 +90,19 @@ export default {
     mapActiveClick(index) {
       this.mapActiveIndex = index;
     },
+    determine() {
+      this.$refs.chatBox.style.display = "none";
+      this.$router.push(`/home/detail?name=${this.name}`)
+    },
     monitorReport() {
       this.$router.push("/home/report");
+    },
+    navigation () {
+      this.sheetVisible = true
     }
   },
   mounted() {
-    map()
+    point(this.$refs.chatBox);
   },
   components: {
     Header,
@@ -153,6 +183,33 @@ export default {
       .map-active {
         bottom: 0.5rem;
       }
+    }
+  }
+}
+.chat {
+  display: none;
+  position: absolute;
+  width: 5.5rem;
+  .chat-box {
+    width: 100%;
+    height: 0.8rem;
+    background: url("/imgs/chat-box.png") no-repeat;
+    background-size: cover;
+    display: flex;
+    line-height: 0.8rem;
+    padding-left: 0.4rem;
+    font-size: 0.28rem;
+    position: relative;
+    p {
+      height: 0.4rem;
+      position: absolute;
+      right: 0.4rem;
+      top: 0.2rem;
+      padding-left: 0.2rem;
+      line-height: 0.4rem;
+      border-left: 1px solid black;
+      color: RGBA(50, 150, 250, 1);
+      font-weight: bold;
     }
   }
 }

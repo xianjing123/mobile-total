@@ -16,12 +16,13 @@ import DetailEcharts from './Detail-echarts'
 export default {
     data () {
         return {
-            title:"舞阳泵站",
+            title:"",
             datalist:[],
             station:[]
         }
     },
     mounted () {
+        this.title = this.$route.query.name
         var datalist = ["设备编号","井盖编号","管理单位","生产厂家","安装单位","安装日期","目前状态","采集时间"]
         var station = ["硫化氢含量","氨气含量","状态","电流","运行时间","集水池液位"]
         datalist.forEach(item=>{

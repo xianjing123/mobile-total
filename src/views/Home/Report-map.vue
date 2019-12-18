@@ -19,6 +19,13 @@
       </div>
       <div class="report-describe">
         <p class="describe-text">详情描述</p>
+        <div class="describe-input">
+          <div class="describe-input_img">
+            <img src="/imgs/describe-img.png" alt />
+          </div>
+          <input type="text" class="describe-input_text" />
+        </div>
+        <div class="describe-submit" @click="actionSheet">立即上传</div>
       </div>
     </div>
     <div ref="chatBox" class="chat">
@@ -27,6 +34,7 @@
         <p @click="determine">确定</p>
       </div>
     </div>
+    <mt-actionsheet :actions="actions" v-model="sheetVisible"></mt-actionsheet>
   </div>
 </template>
 
@@ -39,7 +47,22 @@ export default {
     return {
       name: "",
       area: "在地图确定问题位置",
-      listShow: false
+      listShow: true, //管线描述提交
+      sheetVisible: false, //立即上传-状态
+      actions: [
+        {
+          name: "拍照",
+          method: function(res) {
+            console.log("拍照");
+          }
+        },
+        {
+          name: "上传图片",
+          method: function(res) {
+            console.log("上传图片");
+          }
+        }
+      ]
     };
   },
   methods: {
@@ -51,6 +74,9 @@ export default {
     reportPut() {
       this.listShow = true;
       this.area = "在地图确定问题位置";
+    },
+    actionSheet() {
+      this.sheetVisible = true;
     }
   },
   mounted() {
@@ -77,6 +103,7 @@ export default {
 }
 .report-hide {
   position: fixed;
+  z-index: 99;
   width: 100%;
   height: 5.5rem;
   bottom: 0;
@@ -131,8 +158,40 @@ export default {
   }
   .report-describe {
     .describe-text {
-      line-height:1rem;
-      color:rgba(25, 31, 37, 1);
+      line-height: 1rem;
+      color: rgba(25, 31, 37, 1);
+    }
+    .describe-input {
+      height: 0.88rem;
+      .describe-input_img {
+        height: 100%;
+        float: left;
+        border-radius: 0.2rem;
+        overflow: hidden;
+        img {
+          height: 100%;
+        }
+      }
+      .describe-input_text {
+        height: 100%;
+        float: right;
+        width: 80%;
+        border-radius: 0.2rem;
+        border: 1px solid rgba(197, 199, 200, 1);
+        outline: none;
+        box-sizing: border-box;
+        padding-left: 0.1rem;
+      }
+    }
+    .describe-submit {
+      width: 100%;
+      height: 0.96rem;
+      background: RGBA(50, 150, 250, 1);
+      color: white;
+      font-size: 0.36rem;
+      line-height: 0.96rem;
+      text-align: center;
+      margin-top: 0.58rem;
     }
   }
 }
@@ -144,20 +203,29 @@ export default {
     width: 100%;
     height: 0.8rem;
     background: url("/imgs/chat-box.png") no-repeat;
+    background-size: cover;
     display: flex;
     line-height: 0.8rem;
     padding-left: 0.4rem;
     font-size: 0.28rem;
+    position: relative;
     p {
       height: 0.4rem;
-      position: relative;
+      position: absolute;
+      right: 0.4rem;
       top: 0.2rem;
-      margin-left: 0.2rem;
       padding-left: 0.2rem;
       line-height: 0.4rem;
       border-left: 1px solid black;
       color: RGBA(50, 150, 250, 1);
       font-weight: bold;
+    }
+    span {
+      display: inline-block;
+      width: 4rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }
