@@ -7,9 +7,8 @@ import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import './assets/css/Allmint.css'
 
-Vue.use(MintUI)
-
 Vue.config.productionTip = false
+Vue.use(MintUI)
 
 
 console.log(dd.ready)
@@ -24,13 +23,45 @@ console.log(dd.ready)
 // });
 
 // dd.ready(function() {
-  // dd.runtime.permission.requestAuthCode({
-  //     corpId: _config.corpId, // 企业id
-  //     onSuccess: function (info) {
-  //               code = info.code // 通过该免登授权码可以获取用户身份
-  //     }});
+// dd.runtime.permission.requestAuthCode({
+//     corpId: _config.corpId, // 企业id
+//     onSuccess: function (info) {
+//               code = info.code // 通过该免登授权码可以获取用户身份
+//     }});
 // })
+// FastClick.prototype.onTouchStart = function (event) {
 
+
+
+//   let e = event || window.event
+
+//   e.stopPropagation() // 阻止事件的进一步传播，包括（冒泡，捕获），无参数
+
+//   e.cancelBubble = true
+
+// }
+
+// FastClick.prototype.onTouchMove = function (event) {
+
+//   let e = event || window.event
+
+//   e.stopPropagation() // 阻止事件的进一步传播，包括（冒泡，捕获），无参数
+
+//   e.cancelBubble = true
+
+// }
+
+// FastClick.prototype.onTouchEnd = function (event) {
+
+
+
+//   let e = event || window.event
+
+//   e.stopPropagation() // 阻止事件的进一步传播，包括（冒泡，捕获），无参数
+
+//   e.cancelBubble = true
+
+// }
 new Vue({
   router,
   store,

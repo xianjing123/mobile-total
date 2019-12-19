@@ -56,7 +56,7 @@ export default {
       name: "xxx监测点", //标题
       popupVisible: false, //侧边栏是否显示
       mapActive: false, //地图类型active
-      sheetVisible:false, //导航栏是否显示 
+      sheetVisible: false, //导航栏是否显示
       datalist: [
         { name: "泵站", imgs: "/imgs/pumping.png" },
         { name: "雨污混排", imgs: "/imgs/sewage.png" },
@@ -95,7 +95,7 @@ export default {
     },
     //导航栏显示
     navigationShow(evt) {
-      this.sheetVisible = evt
+      this.sheetVisible = evt;
     }
   },
   mounted() {

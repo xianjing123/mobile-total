@@ -32,20 +32,20 @@
   font-size: 0.2rem;
   font-family: PingFang SC;
   font-weight: 400;
-  z-index:99;
-  .iconfont{
-    display:block;
-    width:0.48rem;
-    height:0.48rem;
-    font-size:0.48rem;
+  z-index: 99;
+  .iconfont {
+    display: block;
+    width: 0.48rem;
+    height: 0.48rem;
+    font-size: 0.48rem;
     border: 1px solid rgba(236, 236, 236, 1);
-    position:relative;
-    left:50%;
-    transform:translateX(-50%);
-    margin-top:0.1rem;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0.1rem;
   }
-  .icon-task{
-    font-size:0.4rem;
+  .icon-task {
+    font-size: 0.4rem;
   }
 }
 .active {

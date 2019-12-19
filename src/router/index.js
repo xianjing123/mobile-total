@@ -9,7 +9,10 @@ import Report from '../views/Home/Report'
 import Detail from '../views/Home/Detail'
 import ReportMap from '../views/Home/Report-map'
 import { getCookie } from '../components/cookie'
-
+import taskdetail from '../views/task/taskdetail'
+import doingdetail from '../views/task/doingdetail'
+import waydetail from '../views/task/waydetail'
+import successdeyail from '../views/task/successdeyail'
 Vue.use(VueRouter)
 
 const routes = [
@@ -60,6 +63,38 @@ const routes = [
   {
     path: '*',
     redirect: '/home'
+  },
+  {
+    path: '/taskdetail/:id',
+    name: 'taskdetail',
+    meta: {
+      title: '任务名称'
+    },
+    component: taskdetail
+  },
+  {
+    path: '/doingdetail/:id',
+    name: 'doingdetail',
+    meta: {
+      title: '任务名称'
+    },
+    component: doingdetail
+  },
+  {
+    path: '/waydetail/:id',
+    name: 'waydetail',
+    meta: {
+      title: '任务名称'
+    },
+    component: waydetail
+  },
+  {
+    path: '/successdeyail/:id',
+    name: 'successdeyail',
+    meta: {
+      title: '任务名称'
+    },
+    component: successdeyail
   }
 ]
 
@@ -68,16 +103,16 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  if (to.path === "/login") {
-    next()
-  } else {
-    if(getCookie("name")){
-      next()
-    }else{
-      next("/login")
-    }
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   if (to.path === "/login") {
+//     next()
+//   } else {
+//     if (getCookie("name")) {
+//       next()
+//     } else {
+//       next("/login")
+//     }
+//   }
+// })
 
 export default router

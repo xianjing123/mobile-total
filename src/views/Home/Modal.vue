@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="mask"></div>
-    </div>
+  </div>
 </template>
 
 <script>
@@ -49,7 +49,7 @@ export default {
     },
     //导航栏
     navigation() {
-			this.$emit("navigation",true)
+      this.$emit("navigation", true);
     }
   },
   props: ["name"]
@@ -58,25 +58,25 @@ export default {
 
 <style lang="scss" scoped>
 $police: RGBA(242, 86, 67, 1);
-$normal:RGBA(50, 150, 250, 1);
+$normal: RGBA(50, 150, 250, 1);
 .modal-total {
-  display:none;
+  display: none;
   .mask {
-    position:absolute;
-    width:100vw;
-    height:100vh;
-    left:0;
-    top:0;
-    z-index:98;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 98;
   }
   .modal {
     width: 6rem;
-    z-index:99;
+    z-index: 99;
     height: 4.5rem;
     background: white;
     position: absolute;
-    left:50%;
-    transform: translate(-50%,10%);
+    left: 50%;
+    transform: translate(-50%, 10%);
     border-radius: 0.2rem;
     overflow: hidden;
     .modal-title {
@@ -95,7 +95,7 @@ $normal:RGBA(50, 150, 250, 1);
         line-height: 0.5rem;
         font-size: 0.3rem;
         p:nth-of-type(1) {
-          width: 30%;
+          width: 40%;
           box-sizing: border-box;
           padding-left: 0.2rem;
         }

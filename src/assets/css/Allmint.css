@@ -4,3 +4,21 @@
 .monitor .navigation .v-modal {
     opacity: 0.5;
 }
+#task .mint-cell-wrapper{
+    height: 1.45rem;
+  }
+  #task .mint-cell-right {
+    height: 1.45rem;
+    
+  }
+  #task .mint-cell-right .mint-cell-swipe-button{
+      line-height: 1.45rem;
+      text-align: center;
+      padding: 0;
+      border: none;
+      margin-right: .01rem;
+      font-size: .28rem;
+  }
+  #nav .is-selected{
+      margin: 0;
+  }

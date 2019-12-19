@@ -48,6 +48,6 @@ export default {
   }
 }
 .div {
-  height:0.8rem;
+  height: 0.8rem;
 }
 </style>
