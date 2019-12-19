@@ -41,7 +41,8 @@ export default {
 
 <style lang="scss" scoped>
 .report {
-  background: rgba(50, 77, 172, 1);
+  background:url("/imgs/report-background.png") no-repeat;
+  background-size:cover;
   width: 100%;
   height: calc(100vh - 1.84rem);
   overflow: hidden;

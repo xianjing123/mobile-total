@@ -103,16 +103,16 @@ const router = new VueRouter({
   routes
 })
 
-// router.beforeEach((to, from, next) => {
-//   if (to.path === "/login") {
-//     next()
-//   } else {
-//     if (getCookie("name")) {
-//       next()
-//     } else {
-//       next("/login")
-//     }
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  if (to.path === "/login") {
+    next()
+  } else {
+    if (getCookie("name")) {
+      next()
+    } else {
+      next("/login")
+    }
+  }
+})
 
 export default router
