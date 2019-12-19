@@ -9,6 +9,7 @@ import { getCookie } from '../components/cookie'
 import taskdetail from '../views/task/taskdetail'
 import doingdetail from '../views/task/doingdetail'
 import waydetail from '../views/task/waydetail'
+import successdeyail from '../views/task/successdeyail'
 Vue.use(VueRouter)
 
 const routes = [
@@ -68,6 +69,14 @@ const routes = [
       title: '任务名称'
     },
     component: waydetail
+  },
+  {
+    path: '/successdeyail/:id',
+    name: 'successdeyail',
+    meta: {
+      title: '任务名称'
+    },
+    component: successdeyail
   }
 ]
 

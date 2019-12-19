@@ -53,7 +53,7 @@
         </div>
       </mt-tab-container-item>
       <mt-tab-container-item id="3">
-        <div class="task_list" v-for="item in tesklist" :key="item.id">
+        <div class="task_list" v-for="item in tesklist" :key="item.id" @click="successbtn(item.id)">
           <img :src="item.img" alt />
           <span class="title">{{item.title}}</span>
           <span class="date_tit">{{item.tiem_tit}}</span>
@@ -135,6 +135,9 @@ export default {
     },
     gotoDetails(id) {
       this.$router.push({ path: "/taskdetail/" + id });
+    },
+    successbtn(id) {
+      this.$router.push({ path: "/successdeyail/" + id });
     }
   }
 };
