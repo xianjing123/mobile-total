@@ -14,17 +14,23 @@
     ></mt-cell>
     <mt-cell style="border-bottom:1px solid rgba(197, 199, 200, 1)" title="所属部门" value="排水科"></mt-cell>
     <mt-cell to="/updetepassword/" title="密码" is-link value="*******"></mt-cell>
-    <div class="me_btn">退出登录</div>
+    <div class="me_btn" @click="logout">退出登录</div>
   </div>
 </template>
 
 <script>
 import Header from "../components/Header";
+import {removeCookie} from '../components/cookie'
 export default {
   components: {
     Header
   },
-  methods: {}
+  methods: {
+    logout () {
+      removeCookie("name")
+      this.$router.push('/login')
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

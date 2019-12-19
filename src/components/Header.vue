@@ -35,6 +35,7 @@ export default {
   position: fixed;
   left: 0;
   top: 0;
+  z-index:99;
   .icon-xiangzuo {
     position: absolute;
     left: 0.1rem;

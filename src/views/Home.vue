@@ -14,12 +14,16 @@
       <div class="monitor-content">地图类型</div>
       <div class="map-type">
         <div class="map-photo" :class="mapActive?'active':''" @click="()=>{mapActive=true}">
-          <img src="/imgs/line.png" alt />
+          <div class="map-photo_active">
+            <img src="/imgs/line.png" alt />
+          </div>
           <img src="/imgs/map-active.png" alt class="map-active" />
           <span>管线</span>
         </div>
         <div class="map-photo" :class="mapActive?'':'active'" @click="()=>{mapActive=false}">
-          <img src="/imgs/road.png" alt />
+          <div class="map-photo_active">
+            <img src="/imgs/road.png" alt />
+          </div>
           <img src="/imgs/map-active.png" alt class="map-active" />
           <span>道路</span>
         </div>
@@ -33,7 +37,9 @@
           :class="index===mapActiveIndex?'active':''"
           @click="mapActiveClick(index)"
         >
-          <img :src="data.imgs" alt />
+          <div class="map-photo_active">
+            <img :src="data.imgs" alt />
+          </div>
           <img src="/imgs/map-active.png" alt class="map-active" />
           <span>{{data.name}}</span>
         </div>
@@ -152,8 +158,14 @@ export default {
     .map-photo {
       position: relative;
       width: 1.3rem;
-      border-radius: 7px;
       text-align: center;
+      .map-photo_active {
+        width: 1.38rem;
+        margin: 0 auto;
+        box-sizing: border-box;
+        border: 2px solid rgba(163, 165, 167, 1);
+        border-radius: 7px;
+      }
       img:first-child {
         width: 1.3rem;
         display: block;
@@ -173,6 +185,10 @@ export default {
       }
     }
     .active {
+      .map-photo_active{
+        border:2px solid rgba(33, 144, 255, 1);
+        box-shadow: 0 0 10px 0 rgba(33, 144, 255, 0.3);
+      }
       .map-active {
         display: block;
       }
