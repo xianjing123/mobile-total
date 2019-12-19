@@ -91,19 +91,20 @@ function normalStation(node) {
         geometry: point,
         symbol: markerSymbol
       });
-      graphicsLayer.add(pointGraphic);
       view.on('click', e => {
         view.hitTest(e).then(res => {
           if (res.results.length) {
             node.style.display = "block"
-            node.style.left = res.screenPoint.x + 'px'
-            node.style.top = res.screenPoint.y + 'px'
-            node.style.transform = "translate(-43%,-95%)"
+            view.goTo(e.mapPoint)
+            node.lastChild.onclick = function () {
+              node.style.display = 'none'
+            }
           } else {
             node.style.display = "none"
           }
         })
       })
+      graphicsLayer.add(pointGraphic);
     })
   })
 }
