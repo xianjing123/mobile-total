@@ -32,6 +32,7 @@
   font-size: 0.2rem;
   font-family: PingFang SC;
   font-weight: 400;
+  z-index: 99;
   .iconfont {
     display: block;
     width: 0.48rem;

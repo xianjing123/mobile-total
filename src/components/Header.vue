@@ -1,11 +1,14 @@
 <template>
-  <div class="header">
-    <div>
-      <i class="iconfont icon-xiangzuo" @click="historyGo"></i>
+  <div>
+    <div class="header">
+      <div>
+        <i class="iconfont icon-xiangzuo" @click="historyGo"></i>
+      </div>
+      <div class="header-content">
+        <slot></slot>
+      </div>
     </div>
-    <div class="header-content">
-      <slot></slot>
-    </div>
+    <div class="div"></div>
   </div>
 </template>
 
@@ -13,7 +16,7 @@
 export default {
   methods: {
     historyGo() {
-      console.log(this.$router.go(-1));
+      this.$router.go(-1);
     }
   }
 };
@@ -25,11 +28,13 @@ export default {
   height: 0.8rem;
   background: white;
   line-height: 0.8rem;
-  font-size: 0.32rem;
+  font-size: 0.36rem;
   font-family: PingFang SC;
   font-weight: bold;
   color: rgba(25, 31, 37, 1);
-  position: relative;
+  position: fixed;
+  left: 0;
+  top: 0;
   .icon-xiangzuo {
     position: absolute;
     left: 0.1rem;
@@ -41,5 +46,8 @@ export default {
     left: 50%;
     transform: translateX(-50%);
   }
+}
+.div {
+  height: 0.8rem;
 }
 </style>

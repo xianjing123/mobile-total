@@ -1,3 +1,9 @@
+.monitor .v-modal {
+    opacity: 0;
+}
+.monitor .navigation .v-modal {
+    opacity: 0.5;
+}
 #task .mint-cell-wrapper{
     height: 1.45rem;
   }

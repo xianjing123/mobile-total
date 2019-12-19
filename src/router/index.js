@@ -5,6 +5,9 @@ import Task from '../views/Task'
 import Special from '../views/Special'
 import Mine from '../views/Mine'
 import Login from '../views/Login'
+import Report from '../views/Home/Report'
+import Detail from '../views/Home/Detail'
+import ReportMap from '../views/Home/Report-map'
 import { getCookie } from '../components/cookie'
 import taskdetail from '../views/task/taskdetail'
 import doingdetail from '../views/task/doingdetail'
@@ -18,6 +21,21 @@ const routes = [
     path: '/home',
     name: 'home',
     component: Home
+  },
+  {
+    path: '/home/report',
+    name: 'report',
+    component: Report
+  },
+  {
+    path: '/home/report/map',
+    name: 'reportmap',
+    component: ReportMap
+  },
+  {
+    path: '/home/detail',
+    name: 'detail',
+    component: Detail
   },
   {
     path: '/task',

@@ -26,9 +26,9 @@ export default {
 .login {
   background: blue;
   button {
-    width: 2rem;
-    height: 2rem;
-    line-height: 2rem;
+    width: 1rem;
+    height: 1rem;
+    line-height: 1rem;
   }
 }
 </style>
