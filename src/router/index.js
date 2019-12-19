@@ -10,6 +10,7 @@ import taskdetail from '../views/task/taskdetail'
 import doingdetail from '../views/task/doingdetail'
 import waydetail from '../views/task/waydetail'
 import successdeyail from '../views/task/successdeyail'
+import updetepassword from '../views/mine/updetepassword'
 Vue.use(VueRouter)
 
 const routes = [
@@ -77,6 +78,14 @@ const routes = [
       title: '任务名称'
     },
     component: successdeyail
+  },
+  {
+    path: '/updetepassword/',
+    name: 'updetepassword',
+    meta: {
+      title: '任务名称'
+    },
+    component: updetepassword
   }
 ]
 
