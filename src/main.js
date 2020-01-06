@@ -6,6 +6,8 @@ import * as dd from 'dingtalk-jsapi'
 import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import './assets/css/Allmint.css'
+import echarts from 'echarts'
+Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false
 Vue.use(MintUI)

@@ -14,6 +14,10 @@ import doingdetail from '../views/task/doingdetail'
 import waydetail from '../views/task/waydetail'
 import successdeyail from '../views/task/successdeyail'
 import updetepassword from '../views/mine/updetepassword'
+import bridge from '../views/specialshow/bridge'
+import drainage from '../views/specialshow/drainage'
+import management from '../views/specialshow/management'
+import road from '../views/specialshow/road'
 Vue.use(VueRouter)
 
 const routes = [
@@ -46,6 +50,26 @@ const routes = [
     path: '/special',
     name: 'special',
     component: Special
+  },
+  {
+    path: '/special/bridge',
+    name: 'bridge',
+    component: bridge
+  },
+  {
+    path: '/special/drainage',
+    name: 'drainage',
+    component: drainage
+  },
+  {
+    path: '/special/management',
+    name: 'management',
+    component: management
+  },
+  {
+    path: '/special/road',
+    name: 'road',
+    component: road
   },
   {
     path: '/mine',
