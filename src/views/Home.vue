@@ -13,14 +13,14 @@
     <mt-popup v-model="popupVisible" position="right" class="monitor-popup">
       <div class="monitor-content">地图类型</div>
       <div class="map-type">
-        <div class="map-photo" :class="mapActive?'active':''" @click="()=>{mapActive=true}">
+        <div class="map-photo" :class="mapActive?'active':''" @click="mapActiveShow(true)">
           <div class="map-photo_active">
             <img src="/imgs/line.png" alt />
           </div>
           <img src="/imgs/map-active.png" alt class="map-active" />
           <span>管线</span>
         </div>
-        <div class="map-photo" :class="mapActive?'':'active'" @click="()=>{mapActive=false}">
+        <div class="map-photo" :class="mapActive?'':'active'" @click="mapActiveShow(false)">
           <div class="map-photo_active">
             <img src="/imgs/road.png" alt />
           </div>
@@ -62,6 +62,7 @@ export default {
       name: "xxx监测点", //标题
       popupVisible: false, //侧边栏是否显示
       mapActive: false, //地图类型active
+      mapActiveIndex: 0, //监测点active
       sheetVisible: false, //导航栏是否显示
       datalist: [
         { name: "泵站", imgs: "/imgs/pumping.png" },
@@ -69,7 +70,6 @@ export default {
         { name: "积水", imgs: "/imgs/rain.png" },
         { name: "井盖", imgs: "/imgs/manhole.png" }
       ], //侧边栏内容
-      mapActiveIndex: 0, //监测点active
       actions: [
         {
           name: "百度地图",
@@ -102,10 +102,14 @@ export default {
     //导航栏显示
     navigationShow(evt) {
       this.sheetVisible = evt;
+    },
+    mapActiveShow(show){
+      this.mapActive=show
+      normalStation(this.$refs.modal.$el,this.mapActive)
     }
   },
   mounted() {
-    normalStation(this.$refs.modal.$el);
+    normalStation(this.$refs.modal.$el,this.mapActive);
   },
   components: {
     Header,
