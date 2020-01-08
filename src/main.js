@@ -7,14 +7,13 @@ import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import './assets/css/Allmint.css'
 import echarts from 'echarts'
+import axios from 'axios'
+// import weekSlider from 'v-week-slider'
+// Vue.use(weekSlider)
+Vue.prototype.axios = axios;
 Vue.prototype.$echarts = echarts
-
-
 Vue.config.productionTip = false
 Vue.use(MintUI)
-
-
-
 console.log(dd.ready)
 // dd.config({
 //   agentId: '', // 必填，微应用ID

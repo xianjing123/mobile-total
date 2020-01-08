@@ -49,7 +49,7 @@ export default {
       area: "在地图确定问题位置", //地图点弹出层内容
       listShow: true, //管线描述提交
       sheetVisible: false, //立即上传-状态
-      actions: [
+      actions: [ //导航栏内容
         {
           name: "拍照",
           method: function(res) {
@@ -62,7 +62,7 @@ export default {
             console.log("上传图片");
           }
         }
-      ] //导航栏内容
+      ]
     };
   },
   methods: {

@@ -5,7 +5,8 @@
                 <mt-button icon="back"></mt-button>
             </a>
         </mt-header>
-        <div class="management-conetnt">           
+        <div class="management-conetnt"> 
+           <picker @fuck="childMethod($event)"  ref="mychild"></picker>          
                 <div class="examples">
                     <div class="bannerBox">
                         <div class="swiper-container">
@@ -14,7 +15,7 @@
                                 <div class="theroad">
                                 <label class="theroad-head">
                                     <!-- <img src="../assets/managements.png"> -->
-                                    <span>道路</span>
+                                    <span>舞阳桥洞</span>
                                 </label>
                                 <div class="option1">
                                     <linegraph :id="'bargraph'" :data="option"></linegraph>
@@ -31,7 +32,7 @@
                                 <div class="theroad">
                                 <label class="theroad-head">
                                     <!-- <img src="../assets/managements.png"> -->
-                                    <span>泵站</span>
+                                    <span>春晖桥洞</span>
                                 </label>
                                 <div class="option1">
                                     <linegraph :id="'bargraphw'" :data="option3"></linegraph>
@@ -53,6 +54,7 @@
 </template>
 <script>
 import Swiper from 'swiper' 
+import picker from './mouth'
 import linegraph from './echartscom.vue'
 import 'swiper/css/swiper.css';
 export default {
@@ -264,7 +266,7 @@ export default {
           loopAdditionaSlider: 0, 
     });
   },  
-  components: {linegraph},  
+  components: {linegraph,picker},  
    
 }
 </script>

@@ -1,6 +1,5 @@
 <template>
   <div class="login">
-    <!-- <button @click="LoginTo">登录</button> -->
     <div v-if="loading">
       <div class="login-logo">
         <img src="/imgs/logo-login.png" alt />
@@ -82,12 +81,11 @@ export default {
     //点击登录
 
     LoginTo() {
-      var that = this;
       if (this.$refs.username.value === "") {
-        this.$refs.usernameBlock.style.border = "1px solid orange";
+        this.$refs.usernameBlock.style.border = "1px solid orange";
       }
       if (this.$refs.password.value === "") {
-        this.$refs.passwordBlock.style.border = "1px solid orange";
+        this.$refs.passwordBlock.style.border = "1px solid orange";
       }
       if (
         this.$refs.username.value === "" ||
