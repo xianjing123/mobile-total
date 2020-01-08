@@ -15,7 +15,7 @@
                                 <div class="theroad">
                                 <label class="theroad-head">
                                     <!-- <img src="../assets/managements.png"> -->
-                                    <span>道路</span>
+                                    <span>舞阳桥洞</span>
                                 </label>
                                 <div class="option1">
                                     <linegraph :id="'bargraph'" :data="option"></linegraph>
@@ -32,7 +32,7 @@
                                 <div class="theroad">
                                 <label class="theroad-head">
                                     <!-- <img src="../assets/managements.png"> -->
-                                    <span>泵站</span>
+                                    <span>春晖桥洞</span>
                                 </label>
                                 <div class="option1">
                                     <linegraph :id="'bargraphw'" :data="option3"></linegraph>
