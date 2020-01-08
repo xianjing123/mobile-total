@@ -22,3 +22,6 @@
   #nav .is-selected{
       margin: 0;
   }
+  .page-cell .mint-cell-swipe-buttongroup {
+      height: auto;
+}

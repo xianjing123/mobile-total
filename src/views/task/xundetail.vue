@@ -2,70 +2,58 @@
   <div class="taskdetail">
     <Header>任务名称</Header>
     <div id="viewDiv" ref="map"></div>
-    <div class="task_news">
+    <div class="task_news" ref="task_news">
       <div class="task_top">
         <img src="/imgs/logo.jpg" alt />
         <span class="top_tit">管道问题</span>
         <span class="top_adress">浙江省湖州市德清县科园路</span>
-        <span class="nav">更改位置</span>
+        <span class="nav">导航</span>
       </div>
       <div class="top_des">
         <div class="top_des_01">
           <span class="des_tit">详情描述</span>
           <img src="/imgs/logo.jpg" alt />
-          <input class="inp_tit" type="text" value="管道破裂" placeholder="请输入原因.." v-model="what" />
+          <input class="inp_tit" type="text" value="管道破裂" />
         </div>
         <div class="top_des_02">
           <span class="des_name">上报人</span>
-          <input type="text" class="inp_name" value="张三" placeholder="请输入名称" v-model="people" />
-          <span class="inp_date" @click="openPicker()">{{tadevalue}}</span>
+          <input type="text" class="inp_name" value="张三" />
+          <input type="text" class="inp_date" value="2019/10/22 12:41:20" />
         </div>
-        <!-- <div class="top_des_03">
+        <div class="top_des_03">
           <span class="des_name">任务来源</span>
           <input type="text" class="inp_origin" value="一路一档信息管理系统" />
         </div>
         <div class="top_des_04">
-          <span class="des_name">案件等级</span>
+          <span class="des_name">巡检周期</span>
           <div class="show_pup" @click="showpup()">
             <input type="text" class="inp_pup" v-model="message" />
           </div>
         </div>
-        <div class="top_des_05">
-          <span class="des_name">案件描述</span>
-        <textarea width="100%" class="inp_des"></textarea>-->
-        <!-- <input type="textarea" class="inp_des" /> -->
-        <!-- </div>
-        <div class="top_des_05" style="margin-top:.15rem">
-          <span class="des_name">处理意见</span>
-        <textarea width="100%" class="inp_des"></textarea>-->
-        <!-- <input type="textarea" class="inp_des" /> -->
-        <!-- </div>
-        <div class="top_des_05" style="margin-top:.15rem">
-          <span class="des_name">附件</span>
-          <div class="des_img">
-            <img src alt />
+        <div class="top_des_04">
+          <span class="des_name">开始日期</span>
+          <div class="show_pup" @click="this.openPicker">
+            <input type="text" class="inp_pup" v-model="message1" />
+          </div>
+        </div>
+        <div class="top_des_04">
+          <span class="des_name">开始日期</span>
+          <div class="show_pup" @click="this.openPicker1">
+            <input type="text" class="inp_pup" v-model="message2" />
+          </div>
+        </div>
+        <div class="kong"></div>
+        <!-- <div class="btn">
+          <button class="btn1">接单</button>
+          <button class="btn2">取消</button>
         </div>-->
-        <!-- <input type="textarea" class="inp_des" /> -->
-        <!-- </div> -->
         <div class="btn">
-          <button class="btn1" @click="btn_top">立即上报</button>
-          <!-- <button class="btn2">取消</button> -->
+          <button class="btn1" @click="btn_receipt()">返回</button>
+          <button class="btn2" @click="btn_bottom()">完成</button>
         </div>
       </div>
-      <div @touchmove.prevent>
-        <mt-datetime-picker
-          lockScroll="true"
-          ref="datePicker"
-          v-model="dateVal"
-          type="date"
-          year-format="{value} 年"
-          month-format="{value} 月"
-          date-format="{value} 日"
-          @confirm="handleConfirm()"
-        ></mt-datetime-picker>
-      </div>
     </div>
-    <!-- <mt-popup
+    <mt-popup
       v-model="popupVisible"
       popup-transition="popup-fade"
       closeOnClickModal="true"
@@ -78,40 +66,66 @@
           <span class="usi-btn-sure" @click="popupVisible = !popupVisible">确定</span>
         </div>
       </mt-picker>
-    </mt-popup>-->
+    </mt-popup>
+    <mt-datetime-picker
+      ref="pickerStartTime"
+      type="datetime"
+      v-model="pickerValueStartTime"
+      @confirm="this.handleConfirmStartTime"
+      class="timedate"
+    ></mt-datetime-picker>
+    <mt-datetime-picker
+      ref="pickerStartTime1"
+      type="datetime"
+      v-model="pickerValueStartTime1"
+      @confirm="this.handleConfirmStartTime1"
+      class="timedate"
+    ></mt-datetime-picker>
   </div>
 </template>
 
 <script>
 import Header from "../../components/Header";
 import esriLoader from "esri-loader";
-import axios from "axios";
-import { getCookie } from "../../components/cookie";
 export default {
   data() {
     return {
       popupVisible: false,
       message: "请选择代理区域",
+      message1: new Date().toLocaleString("chinese", { hour12: false }),
+      message2: new Date().toLocaleString("chinese", { hour12: false }),
       showToolbar: true,
+      pickerValueStartTime: "",
+      pickerValueStartTime1: "",
       slots: [
         {
           values: ["城市选择", "苏州", "常州", "杭州", "湖州", "上海", "南京"]
         }
-      ],
-      what: "",
-      people: "",
-      date: "",
-      dateVal: "",
-      tadevalue: "2020-1-7",
-      token: ""
+      ]
     };
   },
   components: {
     Header
   },
   mounted() {
+    //arcgis地图服务
     var that = this;
-    this.id = this.$route.params.id;
+    this.$refs.task_news.ontouchstart = function(evt) {
+      var downTop = evt.changedTouches[0].clientY;
+      window.ontouchmove = function(evt) {
+        if (evt.changedTouches[0].clientY - downTop > 0) {
+          that.$refs.task_news.style.transform = "translateY(8rem)";
+          that.slider = true;
+        } else {
+          that.$refs.task_news.style.transform = "translateY(0)";
+          that.slider = false;
+        }
+      };
+      window.ontouchend = function(evt) {
+        window.ontouchmove = null;
+        window.ontouchend = null;
+      };
+    };
     var options = { url: "https://js.arcgis.com/4.13/" };
     this.$store.commit("commitShow", false);
     esriLoader
@@ -158,7 +172,28 @@ export default {
         console.error(err);
       });
   },
+
   methods: {
+    //日期时间选择器
+    openPicker() {
+      this.$refs.pickerStartTime.open();
+    },
+    openPicker1() {
+      this.$refs.pickerStartTime1.open();
+    },
+    handleConfirmStartTime() {
+      var timedate = this.pickerValueStartTime.toLocaleString("chinese", {
+        hour12: false
+      });
+      this.message1 = timedate;
+    },
+    handleConfirmStartTime1() {
+      var timedate1 = this.pickerValueStartTime1.toLocaleString("chinese", {
+        hour12: false
+      });
+      this.message2 = timedate1;
+    },
+    //选择器
     onValuesChange(picker, values) {
       this.message = values;
       if (values[0] > values[1]) {
@@ -167,56 +202,14 @@ export default {
     },
     showpup() {
       this.popupVisible = true;
-    },
-    openPicker() {
-      this.$refs.datePicker.open();
-      this.isShow = !this.isShow;
-    },
-    formatDate(date) {
-      const y = date.getFullYear();
-      let m = date.getMonth() + 1;
-      m = m < 10 ? "0" + m : m;
-      let d = date.getDate();
-      d = d < 10 ? "0" + d : d;
-      return y + "-" + m + "-" + d;
-    },
-    handleConfirm() {
-      // 输出格式化后的时间
-      this.tadevalue = this.formatDate(this.$refs.datePicker.value);
-      console.log(this.formatDate(this.$refs.datePicker.value));
-      this.isShow = !this.isShow;
-    },
-    btn_top() {
-      console.log("1");
-      let data = new FormData();
-      data.append("id", this.id);
-      data.append("reason", this.what);
-      data.append("reportUserInfoId", this.people);
-      data.append("createTime", this.date);
-      axios
-        .post(
-          this.$store.state.urls + "way/inspectionRecord/insertInspectionCase",
-          data,
-          {
-            headers: {
-              Authorization: this.token
-            }
-          }
-        )
-        .then(res => {
-          if (res.data.code == "200") {
-            MessageBox("提示", "接单成功");
-          }
-          // console.log("res=>", res);
-        });
     }
+
+    // showdate() {
+    //   this.pickerValue = true;
+    // }
   },
   destroyed() {
     this.$store.commit("commitShow", true);
-  },
-  created() {
-    this.token = getCookie("token");
-    // this.type = localStorage.getItem("type");
   }
 };
 </script>
@@ -234,8 +227,10 @@ export default {
     width: 100%;
     height: 12.6rem;
     position: fixed;
-    bottom: -6.5rem;
+    bottom: 0rem;
     left: 0;
+    transform: translateY(8rem);
+    transition: 0.3s;
     background-color: #fff;
     .task_top {
       width: 100%;
@@ -300,7 +295,7 @@ export default {
           border-radius: 0.12rem;
           border: 0.01rem solid #eee;
           text-align: center;
-          color: rgba(112, 112, 112, 1);
+          // color: rgba(112, 112, 112, 1);
         }
       }
       .top_des_02 {
@@ -322,19 +317,18 @@ export default {
           top: 0.26rem;
           left: 1.48rem;
           text-align: center;
-          color: rgba(112, 112, 112, 1);
+          // color: rgba(112, 112, 112, 1);
         }
         .inp_date {
           width: 56.8%;
           height: 0.88rem;
-          line-height: 0.88rem;
           border: 0.01rem solid #eee;
           border-radius: 0.12rem;
           text-align: center;
           position: absolute;
           top: 0.26rem;
           right: 0.32rem;
-          color: rgba(112, 112, 112, 1);
+          // color: rgba(112, 112, 112, 1);
         }
       }
       .top_des_03 {
@@ -356,7 +350,7 @@ export default {
           border-radius: 0.12rem;
           border: 0.01rem solid #eee;
           text-align: center;
-          color: rgba(112, 112, 112, 1);
+          // color: rgba(112, 112, 112, 1);
         }
       }
       .top_des_04 {
@@ -379,7 +373,7 @@ export default {
           border-radius: 0.12rem;
           // border: 0.01rem solid #eee;
           text-align: center;
-          color: rgba(112, 112, 112, 1);
+          // color: rgba(112, 112, 112, 1);
           font-size: 0.24rem;
           .inp_pup {
             width: 100%;
@@ -388,54 +382,23 @@ export default {
             border-radius: 0.12rem;
             border: 0.01rem solid #eee;
             text-align: center;
-            color: rgba(112, 112, 112, 1);
+            // color: rgba(112, 112, 112, 1);
           }
         }
       }
-      .top_des_05 {
-        width: 100%;
-        height: 1.6rem;
-        position: relative;
-        .des_name {
-          font-size: 0.24rem;
-          position: absolute;
-          top: 0.1rem;
-          left: 0.32rem;
-        }
-        .inp_des {
-          width: calc(76% - 0.1rem);
-          height: 1.4rem;
-          position: absolute;
-          top: 0.01rem;
-          right: 0.32rem;
-          padding: 0.05rem;
-          border-radius: 0.12rem;
-          border: 0.01rem solid #eee;
-          color: rgba(112, 112, 112, 1);
-        }
-        .des_img {
-          width: 1rem;
-          height: 1rem;
-          position: absolute;
-          top: 0.01rem;
-          left: 1.48rem;
-          border-radius: 0.12rem;
-          border: 0.01rem solid #eee;
-          color: rgba(112, 112, 112, 1);
-        }
-      }
+
       .btn {
         width: 100%;
-        height: 1rem;
-        margin-top: 0.2rem;
+        height: 0.6rem;
+        margin-top: 0.5rem;
         .btn1 {
-          width: 80%;
-          height: 0.8rem;
+          width: 1.28rem;
+          height: 0.6rem;
           background-color: rgba(50, 150, 250, 1);
           color: #fff;
           border: none;
           border-radius: 0.06rem;
-          margin-left: 10%;
+          margin-left: 28%;
         }
         .btn2 {
           width: 1.28rem;
@@ -446,6 +409,12 @@ export default {
           border-radius: 0.06rem;
           margin-left: 10%;
         }
+      }
+      .kong {
+        width: 90%;
+        height: 0.2rem;
+        border-bottom: 0.01rem solid #eee;
+        margin-left: 5%;
       }
     }
   }

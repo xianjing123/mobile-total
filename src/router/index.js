@@ -12,6 +12,7 @@ import { getCookie } from '../components/cookie'
 import taskdetail from '../views/task/taskdetail'
 import doingdetail from '../views/task/doingdetail'
 import waydetail from '../views/task/waydetail'
+import xundetail from '../views/task/xundetail'
 import successdeyail from '../views/task/successdeyail'
 import updetepassword from '../views/mine/updetepassword'
 import bridge from '../views/specialshow/bridge'
@@ -114,6 +115,14 @@ const routes = [
     component: waydetail
   },
   {
+    path: '/xundetail/:id',
+    name: 'xundetail',
+    meta: {
+      title: '任务名称'
+    },
+    component: xundetail
+  },
+  {
     path: '/successdeyail/:id',
     name: 'successdeyail',
     meta: {
@@ -140,7 +149,7 @@ router.beforeEach((to, from, next) => {
   if (to.path === "/login") {
     next()
   } else {
-    if (getCookie("name")) {
+    if (getCookie("token")) {
       next()
     } else {
       next("/login")

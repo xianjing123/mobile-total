@@ -2,7 +2,7 @@
   <div class="taskdetail">
     <Header>任务名称</Header>
     <div id="viewDiv" ref="map"></div>
-    <div class="task_news">
+    <div class="task_news" ref="task_news">
       <div class="task_top">
         <img src="/imgs/logo.jpg" alt />
         <span class="top_tit">管道问题</span>
@@ -90,6 +90,23 @@ export default {
     Header
   },
   mounted() {
+    var that = this;
+    this.$refs.task_news.ontouchstart = function(evt) {
+      var downTop = evt.changedTouches[0].clientY;
+      window.ontouchmove = function(evt) {
+        if (evt.changedTouches[0].clientY - downTop > 0) {
+          that.$refs.task_news.style.transform = "translateY(8rem)";
+          that.slider = true;
+        } else {
+          that.$refs.task_news.style.transform = "translateY(0)";
+          that.slider = false;
+        }
+      };
+      window.ontouchend = function(evt) {
+        window.ontouchmove = null;
+        window.ontouchend = null;
+      };
+    };
     var options = { url: "https://js.arcgis.com/4.13/" };
     this.$store.commit("commitShow", false);
     esriLoader
@@ -168,6 +185,8 @@ export default {
     position: fixed;
     bottom: 0rem;
     left: 0;
+    transform: translateY(8rem);
+    transition: 0.3s;
     background-color: #fff;
     .task_top {
       width: 100%;

@@ -2,12 +2,12 @@
   <div class="taskdetail">
     <Header>任务名称</Header>
     <div id="viewDiv" ref="map"></div>
-    <div class="task_news">
+    <div class="task_news" ref="task_news">
       <div class="task_top">
         <img src="/imgs/logo.jpg" alt />
         <span class="top_tit">管道问题</span>
         <span class="top_adress">浙江省湖州市德清县科园路</span>
-        <span class="nav">导航</span>
+        <span class="nav" @click="sliderTop()">导航</span>
       </div>
       <div class="top_des">
         <div class="top_des_01">
@@ -17,8 +17,9 @@
         </div>
         <div class="top_des_02">
           <span class="des_name">上报人</span>
-          <input type="text" class="inp_name" value="张三" />
-          <input type="text" class="inp_date" value="2019/10/22 12:41:20" />
+          <input type="text" class="inp_name" value="张三" v-model="name" />
+          <!-- <input type="text" class="inp_date" value="2019/10/22 12:41:20" /> -->
+          <span class="inp_date" @click="openPicker()">{{tadevalue}}</span>
         </div>
         <div class="top_des_03">
           <span class="des_name">任务来源</span>
@@ -32,24 +33,26 @@
         </div>
         <div class="top_des_05">
           <span class="des_name">案件描述</span>
-          <textarea width="100%" class="inp_des"></textarea>
+          <textarea width="100%" class="inp_des" v-model="describe"></textarea>
           <!-- <input type="textarea" class="inp_des" /> -->
         </div>
         <div class="top_des_05" style="margin-top:.15rem">
           <span class="des_name">处理意见</span>
-          <textarea width="100%" class="inp_des"></textarea>
+          <textarea width="100%" class="inp_des" v-model="Opinion"></textarea>
           <!-- <input type="textarea" class="inp_des" /> -->
         </div>
         <div class="top_des_05" style="margin-top:.15rem">
           <span class="des_name">附件</span>
-          <div class="des_img">
-            <img src alt />
+          <div class="des_img" @click="()=>{
+            this.$refs.upload.click()
+            }">
+            <img :src="imglink" alt />
           </div>
-          <!-- <input type="textarea" class="inp_des" /> -->
+          <input accept="image/*" type="file" id="img-upload" ref="upload" />
         </div>
         <div class="btn">
-          <button class="btn1">接单</button>
-          <button class="btn2">取消</button>
+          <button class="btn1" @click="btn_receipt()">接单</button>
+          <button class="btn2" @click="btn_bottom()">取消</button>
         </div>
       </div>
     </div>
@@ -67,29 +70,74 @@
         </div>
       </mt-picker>
     </mt-popup>
+    <div @touchmove.prevent>
+      <mt-datetime-picker
+        lockScroll="true"
+        ref="datePicker"
+        v-model="dateVal"
+        type="date"
+        year-format="{value} 年"
+        month-format="{value} 月"
+        date-format="{value} 日"
+        @confirm="handleConfirm()"
+      ></mt-datetime-picker>
+    </div>
   </div>
 </template>
 
 <script>
 import Header from "../../components/Header";
 import esriLoader from "esri-loader";
+import { getCookie } from "../../components/cookie";
+import { MessageBox } from "mint-ui";
+import axios from "axios";
 export default {
   data() {
     return {
       popupVisible: false,
       message: "请选择代理区域",
       showToolbar: true,
+      token: "",
       slots: [
         {
-          values: ["城市选择", "苏州", "常州", "杭州", "湖州", "上海", "南京"]
+          values: ["选择等级", "一级", "二级", "三级"]
         }
-      ]
+      ],
+      dateVal: "",
+      tadevalue: "2020-1-7",
+      name: "",
+      item: "",
+      slider: true,
+      describe: "",
+      Opinion: "",
+      type: "",
+      imglink: "",
+      cid: ""
     };
   },
   components: {
     Header
   },
   mounted() {
+    var that = this;
+    this.id = this.$route.params.id;
+    // console.log(this.$route.params.id);
+    this.$refs.task_news.ontouchstart = function(evt) {
+      var downTop = evt.changedTouches[0].clientY;
+      window.ontouchmove = function(evt) {
+        if (evt.changedTouches[0].clientY - downTop > 0) {
+          that.$refs.task_news.style.transform = "translateY(8rem)";
+          that.slider = true;
+        } else {
+          that.$refs.task_news.style.transform = "translateY(0)";
+          that.slider = false;
+        }
+      };
+      window.ontouchend = function(evt) {
+        window.ontouchmove = null;
+        window.ontouchend = null;
+      };
+    };
     var options = { url: "https://js.arcgis.com/4.13/" };
     this.$store.commit("commitShow", false);
     esriLoader
@@ -135,6 +183,51 @@ export default {
       .catch(err => {
         console.error(err);
       });
+    console.log(this.$store.state.urls);
+    if (this.type == "巡检任务") {
+      axios
+        .get(
+          this.$store.state.urls +
+            "way/inspectionRecord/selectOneInspectionById",
+          {
+            params: {
+              Authorization: this.token,
+              id: this.id
+            }
+          }
+        )
+        .then(res => {
+          console.log(res);
+          this.name = res.data.data.username;
+          this.tadevalue = res.data.data.cycleExecuteTime;
+          this.describe = res.data.data.context;
+          this.Opinion = res.data.data.result;
+          this.imglink = this.$store.state.urls + res.data.data.link;
+          // this.newtasklist = res.data.data.records;
+        });
+    } else {
+      axios
+        .get(
+          this.$store.state.urls +
+            "way/InspectionCaseMangement/mobileAcceptTestDdetails",
+          {
+            params: {
+              Authorization: this.token,
+              cid: this.id
+            }
+          }
+        )
+        .then(res => {
+          console.log(res);
+          this.name = res.data.data.username;
+          this.tadevalue = res.data.data.createTime;
+          this.describe = res.data.data.caseDescribe;
+          this.Opinion = res.data.data.advice;
+          this.imglink = this.$store.state.urls + res.data.data.link;
+          this.cid = res.data.data.cid;
+          // this.newtasklist = res.data.data.records;
+        });
+    }
   },
   methods: {
     onValuesChange(picker, values) {
@@ -145,10 +238,127 @@ export default {
     },
     showpup() {
       this.popupVisible = true;
+    },
+    openPicker() {
+      this.$refs.datePicker.open();
+      this.isShow = !this.isShow;
+    },
+    formatDate(date) {
+      const y = date.getFullYear();
+      let m = date.getMonth() + 1;
+      m = m < 10 ? "0" + m : m;
+      let d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      return y + "-" + m + "-" + d;
+    },
+    handleConfirm() {
+      // 输出格式化后的时间
+      this.tadevalue = this.formatDate(this.$refs.datePicker.value);
+      console.log(this.formatDate(this.$refs.datePicker.value));
+      this.isShow = !this.isShow;
+    },
+    btn_bottom() {
+      this.$refs.task_news.style.transform = "translateY(8rem)";
+      this.slider = true;
+    },
+    btn_receipt() {
+      if (this.type == "巡检任务") {
+        // axios({
+        //   url:
+        //     this.$store.state.urls +
+        //     "way/inspectionRecord/receivingTaskInspection",
+        //   method: "post",
+        //   data: {
+        //     id: this.id
+        //   },
+        //   headers: {
+        //     Authorization: this.token
+        //   }
+        // }).then(res => {
+        //   console.log(res);
+        // });
+        let data = new FormData();
+        data.append("id", this.id);
+        axios
+          .post(
+            this.$store.state.urls +
+              "way/inspectionRecord/receivingTaskInspection",
+            data,
+            {
+              headers: {
+                Authorization: this.token
+              }
+            }
+          )
+          .then(res => {
+            if (res.data.code == "200") {
+              MessageBox("提示", "接单成功");
+            }
+            // console.log("res=>", res);
+          });
+      } else {
+        // let data = new FormData();
+        // data.append("id", this.id);
+        // axios
+        //   .post(
+        //     this.$store.state.urls +
+        //       "way/InspectionCaseMangement/mobileAcceptTest",
+        //     data,
+        //     {
+        //       headers: {
+        //         Authorization: this.token
+        //       }
+        //     }
+        //   )
+        //   .then(res => {
+        //     if (res.data.code == "200") {
+        //       MessageBox("提示", "接单成功");
+        //     }
+        //     // console.log("res=>", res);
+        //   });
+        axios
+          .get(
+            this.$store.state.urls +
+              "way/InspectionCaseMangement/mobileAcceptTest",
+            {
+              params: {
+                // Authorization: this.token,
+                cid: this.cid
+              }
+            }
+          )
+          .then(res => {
+            console.log(res);
+            if (res.data.code == "200") {
+              MessageBox("提示", "接单成功");
+            }
+            // message('')
+            // this.name = res.data.data.username;
+            // this.tadevalue = res.data.data.createTime;
+            // this.describe = res.data.data.caseDescribe;
+            // this.Opinion = res.data.data.advice;
+            // this.imglink = this.$store.state.urls + res.data.data.link;
+            // this.newtasklist = res.data.data.records;
+          });
+      }
     }
+    // sliderTop() {
+    //   console.log(this.slider);
+    //   if (this.slider) {
+    //     this.$refs.task_news.style.transform = "translateY(0)";
+    //     this.slider = false;
+    //   } else {
+    //     this.$refs.task_news.style.transform = "translateY(8rem)";
+    //     this.slider = true;
+    //   }
+    // }
   },
   destroyed() {
     this.$store.commit("commitShow", true);
+  },
+  created() {
+    this.token = getCookie("token");
+    this.type = localStorage.getItem("type");
   }
 };
 </script>
@@ -157,7 +367,6 @@ export default {
 .taskdetail {
   width: 100%;
   height: 100%;
-  // position: relative;
   #viewDiv {
     height: calc(100vh - 1.84rem);
     width: 100%;
@@ -166,8 +375,10 @@ export default {
     width: 100%;
     height: 12.6rem;
     position: fixed;
-    bottom: 0rem;
+    bottom: 0;
     left: 0;
+    transform: translateY(8rem);
+    transition: 0.3s;
     background-color: #fff;
     .task_top {
       width: 100%;
@@ -259,6 +470,7 @@ export default {
         .inp_date {
           width: 56.8%;
           height: 0.88rem;
+          line-height: 0.88rem;
           border: 0.01rem solid #eee;
           border-radius: 0.12rem;
           text-align: center;
@@ -333,6 +545,9 @@ export default {
           top: 0.1rem;
           left: 0.32rem;
         }
+        #img-upload {
+          display: none;
+        }
         .inp_des {
           width: calc(76% - 0.1rem);
           height: 1.4rem;
@@ -353,6 +568,11 @@ export default {
           border-radius: 0.12rem;
           border: 0.01rem solid #eee;
           color: rgba(112, 112, 112, 1);
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 0.12rem;
+          }
         }
       }
       .btn {

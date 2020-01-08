@@ -2,7 +2,7 @@
   <div class="taskdetail">
     <Header>任务名称</Header>
     <div id="viewDiv" ref="map"></div>
-    <div class="task_news">
+    <div class="task_news" ref="task_news">
       <div class="task_top">
         <img src="/imgs/logo.jpg" alt />
         <span class="top_tit">管道问题</span>
@@ -17,36 +17,69 @@
         </div>
         <div class="top_des_02">
           <span class="des_name">上报人</span>
-          <input type="text" class="inp_name" value="张三" />
-          <input type="text" class="inp_date" value="2019/10/22 12:41:20" />
+          <input type="text" class="inp_name" v-model="name" value="张三" />
+          <input type="text" class="inp_date" v-model="tadevalue" value="2019/10/22 12:41:20" />
         </div>
         <div class="top_des_03">
           <span class="des_name">任务来源</span>
           <input type="text" class="inp_origin" value="一路一档信息管理系统" />
         </div>
         <div class="top_des_04">
-          <span class="des_name">巡检周期</span>
-          <div class="show_pup" @click="showpup()">
-            <input type="text" class="inp_pup" v-model="message" />
-          </div>
+          <span class="des_name">案件描述</span>
+          <textarea width="100%" class="inp_des" v-model="describe"></textarea>
         </div>
         <div class="top_des_04">
-          <span class="des_name">开始日期</span>
-          <div class="show_pup" @click="this.openPicker">
-            <input type="text" class="inp_pup" v-model="message1" />
-          </div>
+          <span class="des_name">处理意见</span>
+          <textarea width="100%" class="inp_des" v-model="Opinion1"></textarea>
         </div>
         <div class="top_des_04">
-          <span class="des_name">开始日期</span>
-          <div class="show_pup" @click="this.openPicker1">
-            <input type="text" class="inp_pup" v-model="message2" />
+          <span class="des_name">附件</span>
+          <div class="des_img">
+            <img :src="imglink" alt />
           </div>
         </div>
         <div class="kong"></div>
+        <div class="top_des_03">
+          <span class="des_name">处理后</span>
+        </div>
+        <div class="top_des_03">
+          <span class="des_name">处理人</span>
+          <input
+            type="text"
+            class="inp_origin"
+            v-model="people"
+            placeholder="请输入处理人"
+            value="一路一档信息管理系统"
+          />
+        </div>
+        <div class="top_des_03">
+          <span class="des_name">问题原因</span>
+          <input
+            type="text"
+            class="inp_origin"
+            v-model="reason"
+            placeholder="请输入问题原因"
+            value="一路一档信息管理系统"
+          />
+        </div>
+        <div class="top_des_04">
+          <span class="des_name">处理意见</span>
+          <textarea width="100%" class="inp_des" v-model="Opinion"></textarea>
+        </div>
+        <div class="top_des_04">
+          <span class="des_name">附件</span>
+          <div class="des_img">
+            <input type="file" value id="file" @change="onUpload" />
+          </div>
+        </div>
         <!-- <div class="btn">
           <button class="btn1">接单</button>
           <button class="btn2">取消</button>
         </div>-->
+        <div class="btn">
+          <button class="btn1" @click="btn_receipt()">返回</button>
+          <button class="btn2" @click="btn_bottom()">完成</button>
+        </div>
       </div>
     </div>
     <mt-popup
@@ -83,6 +116,8 @@
 <script>
 import Header from "../../components/Header";
 import esriLoader from "esri-loader";
+import axios from "axios";
+import { getCookie } from "../../components/cookie";
 export default {
   data() {
     return {
@@ -97,7 +132,17 @@ export default {
         {
           values: ["城市选择", "苏州", "常州", "杭州", "湖州", "上海", "南京"]
         }
-      ]
+      ],
+      people: "",
+      reason: "",
+      Opinion: "",
+      tadevalue: "",
+      name: "",
+      describe: "",
+      Opinion1: "",
+      imglink: "",
+      token: "",
+      id: ""
     };
   },
   components: {
@@ -105,6 +150,25 @@ export default {
   },
   mounted() {
     //arcgis地图服务
+    var that = this;
+    this.id = this.$route.params.id;
+    console.log(this.$route.params.id);
+    this.$refs.task_news.ontouchstart = function(evt) {
+      var downTop = evt.changedTouches[0].clientY;
+      window.ontouchmove = function(evt) {
+        if (evt.changedTouches[0].clientY - downTop > 0) {
+          that.$refs.task_news.style.transform = "translateY(8rem)";
+          that.slider = true;
+        } else {
+          that.$refs.task_news.style.transform = "translateY(0)";
+          that.slider = false;
+        }
+      };
+      window.ontouchend = function(evt) {
+        window.ontouchmove = null;
+        window.ontouchend = null;
+      };
+    };
     var options = { url: "https://js.arcgis.com/4.13/" };
     this.$store.commit("commitShow", false);
     esriLoader
@@ -150,6 +214,27 @@ export default {
       .catch(err => {
         console.error(err);
       });
+    axios
+      .get(
+        this.$store.state.urls +
+          "way/InspectionCaseMangement/mobileAcceptTestDdetails",
+        {
+          params: {
+            Authorization: this.token,
+            cid: this.id
+          }
+        }
+      )
+      .then(res => {
+        console.log(res);
+        this.name = res.data.data.username;
+        this.tadevalue = res.data.data.createTime;
+        this.describe = res.data.data.caseDescribe;
+        this.Opinion1 = res.data.data.advice;
+        this.imglink = this.$store.state.urls + res.data.data.link;
+        this.cid = res.data.data.cid;
+        // this.newtasklist = res.data.data.records;
+      });
   },
 
   methods: {
@@ -189,6 +274,20 @@ export default {
   },
   destroyed() {
     this.$store.commit("commitShow", true);
+  },
+  created() {
+    this.token = getCookie("token");
+    this.type = localStorage.getItem("type");
+  },
+  onUpload: function(e) {
+    var file2 = e.target.files[0];
+    console.log(file2);
+    // api.upload(file2).done(function(res) {
+    //   //封装的请求接口api.js文件
+    //   if (res.result.code == 0) {
+    //     console.log(res);
+    //   }
+    // });
   }
 };
 </script>
@@ -208,7 +307,11 @@ export default {
     position: fixed;
     bottom: 0rem;
     left: 0;
+    transform: translateY(8rem);
+    transition: 0.3s;
     background-color: #fff;
+    overflow: auto;
+    margin-bottom: 0.5rem;
     .task_top {
       width: 100%;
       height: 1.76rem;
@@ -272,7 +375,7 @@ export default {
           border-radius: 0.12rem;
           border: 0.01rem solid #eee;
           text-align: center;
-          color: rgba(112, 112, 112, 1);
+          // color: rgba(112, 112, 112, 1);
         }
       }
       .top_des_02 {
@@ -294,7 +397,7 @@ export default {
           top: 0.26rem;
           left: 1.48rem;
           text-align: center;
-          color: rgba(112, 112, 112, 1);
+          // color: rgba(112, 112, 112, 1);
         }
         .inp_date {
           width: 56.8%;
@@ -305,7 +408,7 @@ export default {
           position: absolute;
           top: 0.26rem;
           right: 0.32rem;
-          color: rgba(112, 112, 112, 1);
+          // color: rgba(112, 112, 112, 1);
         }
       }
       .top_des_03 {
@@ -320,19 +423,20 @@ export default {
         }
         .inp_origin {
           width: 76%;
-          height: 0.56rem;
+          height: 0.8rem;
+          line-height: 0.8rem;
           position: absolute;
           top: 0.2rem;
           right: 0.32rem;
           border-radius: 0.12rem;
           border: 0.01rem solid #eee;
           text-align: center;
-          color: rgba(112, 112, 112, 1);
+          // color: rgba(112, 112, 112, 1);
         }
       }
       .top_des_04 {
         width: 100%;
-        height: 0.8rem;
+        height: 1.6rem;
         position: relative;
         .des_name {
           font-size: 0.24rem;
@@ -350,7 +454,7 @@ export default {
           border-radius: 0.12rem;
           // border: 0.01rem solid #eee;
           text-align: center;
-          color: rgba(112, 112, 112, 1);
+          // color: rgba(112, 112, 112, 1);
           font-size: 0.24rem;
           .inp_pup {
             width: 100%;
@@ -359,7 +463,33 @@ export default {
             border-radius: 0.12rem;
             border: 0.01rem solid #eee;
             text-align: center;
-            color: rgba(112, 112, 112, 1);
+            // color: rgba(112, 112, 112, 1);
+          }
+        }
+        .inp_des {
+          width: calc(76% - 0.1rem);
+          height: 1.4rem;
+          position: absolute;
+          top: 0.01rem;
+          right: 0.32rem;
+          padding: 0.05rem;
+          border-radius: 0.12rem;
+          border: 0.01rem solid #eee;
+          color: rgba(112, 112, 112, 1);
+        }
+        .des_img {
+          width: 1rem;
+          height: 1rem;
+          position: absolute;
+          top: 0.01rem;
+          left: 1.48rem;
+          border-radius: 0.12rem;
+          border: 0.01rem solid #eee;
+          color: rgba(112, 112, 112, 1);
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 0.12rem;
           }
         }
       }

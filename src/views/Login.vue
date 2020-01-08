@@ -29,13 +29,13 @@
           <div class="username" ref="usernameBlock">
             <label>
               <img src="/imgs/username.png" alt />
-              <input type="text" placeholder="用户名" ref="username" />
+              <input type="text" placeholder="用户名" ref="username" v-model="username" />
             </label>
           </div>
           <div class="password" ref="passwordBlock">
             <label>
               <img src="/imgs/password.png" alt />
-              <input type="text" placeholder="密码" ref="password" />
+              <input type="text" placeholder="密码" ref="password" v-model="password" />
             </label>
           </div>
           <div class="remember" @click="rememberClick">
@@ -59,35 +59,57 @@
 
 <script>
 import { setCookie } from "../components/cookie";
+import axios from "axios";
 export default {
   data() {
     return {
       loading: true, //加载时
-      isRemember: true //记住密码
+      isRemember: true, //记住密码
+      username: "",
+      password: ""
     };
   },
   mounted() {
     this.$store.commit("commitShow", false);
     setTimeout(() => {
       this.loading = false;
-    }, 500);
+    }, 2000);
   },
   destroyed() {
     this.$store.commit("commitShow", true);
   },
   methods: {
     //点击登录
+
     LoginTo() {
+      var that = this;
+      if (this.$refs.username.value === "") {
+        this.$refs.usernameBlock.style.border = "1px solid orange";
+      }
+      if (this.$refs.password.value === "") {
+        this.$refs.passwordBlock.style.border = "1px solid orange";
+      }
       if (
-        this.$refs.username.value === "" &&
+        this.$refs.username.value === "" ||
         this.$refs.password.value === ""
       ) {
-        this.$refs.usernameBlock.style.border = "1px solid orange"
-        this.$refs.passwordBlock.style.border = "1px solid orange"
         return;
       }
-      setCookie("name", "测试", "/", 1);
-      this.$router.push("/home");
+      axios
+        .post(this.$store.state.urls + "security/subject/login", {
+          username: this.username,
+          password: this.password
+        })
+        .then(function(response) {
+          if (response.data.code == "200") {
+            setCookie("token", response.data.data.jwt, "/", 1);
+            that.$router.push("/home");
+          } else {
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     rememberClick() {
       this.isRemember = !this.isRemember;
@@ -198,7 +220,7 @@ export default {
         height: 0.8rem;
         border-bottom: 1px dashed black;
         box-sizing: border-box;
-        padding-top:0.2rem;
+        padding-top: 0.2rem;
         margin-top: 0.5rem;
         label {
           margin-left: 0.2rem;

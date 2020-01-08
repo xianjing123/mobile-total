@@ -5,10 +5,11 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    isShow : true
+    isShow: true,
+    urls: 'http://192.168.2.135:8080/'
   },
   mutations: {
-    commitShow (state,payload){
+    commitShow(state, payload) {
       state.isShow = payload
     }
   },

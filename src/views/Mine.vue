@@ -5,14 +5,18 @@
       <img class="img_1" src="/imgs/bg_1.png" alt />
       <div class="bg"></div>
       <img class="img_2" src="imgs/header.png" alt />
-      <span>张帅</span>
+      <span>{{mine.username}}</span>
     </div>
     <mt-cell
       style="border-bottom:1px solid rgba(197, 199, 200, 1)"
       title="联系电话"
-      value="18888888888"
+      :value="mine.phoneNum"
     ></mt-cell>
-    <mt-cell style="border-bottom:1px solid rgba(197, 199, 200, 1)" title="所属部门" value="排水科"></mt-cell>
+    <mt-cell
+      style="border-bottom:1px solid rgba(197, 199, 200, 1)"
+      title="所属部门"
+      :value="mine.departmentNames.toString()"
+    ></mt-cell>
     <mt-cell to="/updetepassword/" title="密码" is-link value="*******"></mt-cell>
     <div class="me_btn" @click="logout">退出登录</div>
   </div>
@@ -20,16 +24,40 @@
 
 <script>
 import Header from "../components/Header";
-import {removeCookie} from '../components/cookie'
+import { removeCookie } from "../components/cookie";
+import { getCookie } from "../components/cookie";
+import axios from "axios";
 export default {
+  data() {
+    return {
+      token: "",
+      mine: []
+    };
+  },
   components: {
     Header
   },
   methods: {
-    logout () {
-      removeCookie("name")
-      this.$router.push('/login')
+    logout() {
+      removeCookie("token");
+      this.$router.push("/login");
     }
+  },
+  mounted() {
+    axios
+      .get(this.$store.state.urls + "/security/subject/selectSubjectById", {
+        headers: {
+          Authorization: this.token
+        }
+      })
+      .then(res => {
+        console.log(res);
+        this.mine = res.data.data;
+        // this.newtasklist = res.data.data.records;
+      });
+  },
+  created() {
+    this.token = getCookie("token");
   }
 };
 </script>
