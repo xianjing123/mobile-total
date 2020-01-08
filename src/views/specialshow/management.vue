@@ -633,7 +633,7 @@ export default {
         }else if(_this.swipers == 2){//这是桥梁
           
         }else if(_this.swipers == 3){//这是积水
-          _this.axios.get('http://192.168.2.218:8080/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
+          _this.axios.get('http://218.75.49.82:9997/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
             const data = res.data.data
             let deviceCharts = data.deviceCharts
             _this.datalist8 = data.deviceCharts
@@ -669,7 +669,7 @@ export default {
     });
     this.$nextTick(function(){
       var _this = this; `这一步很重要`
-      _this.axios.get('http://192.168.2.218:8080/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
+      _this.axios.get('http://218.75.49.82:9997/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
         const data = res.data.data
         let deviceCharts = data.deviceCharts
         _this.datalist8 = data.deviceCharts

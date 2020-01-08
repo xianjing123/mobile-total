@@ -86,6 +86,9 @@ export default {
   height: 100%;
   text-align: center
 }
+#management img{
+  padding-top: 0.8rem;
+}
 #management>span{
   display: block;
   color: #FFFFFF;

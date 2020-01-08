@@ -109,7 +109,7 @@ export default {
         // 基于准备好的dom，初始化echarts实例
         let myChart = this.$echarts.init(document.getElementById('myChart'))
         // 绘制图表
-        this.axios.get('http://192.168.2.218:8080/sewage/monitorDevice/selectProblems?month=1').then(res => {
+        this.axios.get('http://218.75.49.82:9997/sewage/monitorDevice/selectProblems?month=1').then(res => {
           const data = res.data.data;
           this.goods = data.data[0].value
           this.good = data.data
