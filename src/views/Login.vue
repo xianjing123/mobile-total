@@ -70,7 +70,10 @@ export default {
     this.$store.commit("commitShow", false);
     setTimeout(() => {
       this.loading = false;
-    }, 500);
+    }, 2000);
+    // window.addEventListener("click",()=>{
+    //   this.loading = false;
+    // })
   },
   destroyed() {
     this.$store.commit("commitShow", true);
