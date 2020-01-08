@@ -6,11 +6,11 @@
             </a>
         </mt-header>
         <div class="management-conetnt">  
-            <picker></picker>         
+            <picker @fuck="childMethod($event)"  ref="mychild"></picker>         
                 <div class="examples">
                 <div class="bannerBox">
                     <div class="swiper-container">
-                    <div class="swiper-wrapper">
+                    <div class="swiper-wrapper" ref="mySwiper">
                         <div class="swiper-slide">
                             <div class="theroad">
                               <label class="theroad-head">
@@ -108,6 +108,7 @@ import 'swiper/css/swiper.css';
 export default {
   data () {
     return {
+      mounth:'1',
       bannerTxt: '长效治理专题',
       banner:[
         {picture_path:'1'},
@@ -615,10 +616,38 @@ export default {
         }]
       },
       datalist7:[],
-      datalist8:[]
+      datalist8:[],
+      swipers:'',
     }
   },
+  methods:{
+      childMethod(evt) {
+        var _this = this; `这一步很重要`
+        _this.mounth = evt
+        // alert(this.swipers)
+        if(_this.swipers == 0){//这是道路
+
+        }else if(_this.swipers == 1){//这是泵站
+
+        }else if(_this.swipers == 2){//这是桥梁
+          
+        }else if(_this.swipers == 3){//这是积水
+          _this.axios.get('http://192.168.2.218:8080/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
+            const data = res.data.data
+            let deviceCharts = data.deviceCharts
+            _this.datalist8 = data.deviceCharts
+            _this.datalist7 = data.warnCountCharts
+            _this.option7.series[0].data=_this.datalist7;
+            _this.option8.series[0].data=_this.datalist8;
+          })
+        }else if(_this.swipers == 4){//这是污水直排
+          
+        }
+        
+      }
+  },
   mounted:function(){
+    var that = this
     new Swiper('.swiper-container', {
           direction: 'horizontal', //滑动方向，可设置水平(horizontal)或垂直(vertical)。
           loop: true, // 设置为true 则开启loop模式
@@ -627,19 +656,39 @@ export default {
           centeredSlides: true, // 设定为true时，active slide会居中，而不是默认状态下的居左。
           spaceBetween: 20, // 在slide之间设置距离（单位px）。
           loopAdditionaSlider: 0, 
+          initialSlide:0,
+          on: {
+            slideChangeTransitionStart: function(item) {
+              that.swipers = this.realIndex;
+            },
+          }
     });
     this.$nextTick(function(){
       var _this = this; `这一步很重要`
-      _this.axios.get('http://192.168.2.218:8080/floodedRoad/deviceManagement/selectWarnDeviceCharts?month=1').then(res => {     
+      _this.axios.get('http://192.168.2.218:8080/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
         const data = res.data.data
         let deviceCharts = data.deviceCharts
-          _this.datalist8 = data.deviceCharts
-          _this.datalist7 = data.warnCountCharts
-          _this.option7.series[0].data=_this.datalist7;
-          _this.option8.series[0].data=_this.datalist8;
-          console.log(data)
-          })
-        })
+        _this.datalist8 = data.deviceCharts
+        _this.datalist7 = data.warnCountCharts
+        _this.option7.series[0].data=_this.datalist7;
+        _this.option8.series[0].data=_this.datalist8;
+        
+      })
+    })
+  },
+  watch:{
+    datalist7(val, oldVal) {
+      let _this = this
+      // console.log(1111, val);
+      // var arrs = []
+      // val.forEach(item=>{
+      //       arrs.push(item.value)
+      // })
+      // alert(1)
+      // _this.$nextTick(val)
+      // this.option7.clear();
+    }
+
   },
   components: {linegraph,picker},  
    

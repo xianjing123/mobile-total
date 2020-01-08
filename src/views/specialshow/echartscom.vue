@@ -14,6 +14,7 @@
           data:{
             handler(newvalue,oldvalue) {
               this.drawLineGraph(this.id,newvalue);
+              this.setOption(datalist7)
             }
           },
           deep:true
@@ -28,6 +29,7 @@
           let _this = this;
           let myChart = document.getElementById(id)
           this.ChartLineGraph = this.$echarts.init(myChart)
+          _this.ChartLineGraph.clear();
           this.ChartLineGraph.setOption(data);
           window.addEventListener("resize",function () {
             _this.ChartLineGraph.resize();
