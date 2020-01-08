@@ -5,9 +5,9 @@
                 <mt-button icon="back"></mt-button>
             </a>
         </mt-header>
-        <div class="rain-conetnt">           
+        <div class="rain-conetnt"> 
+          <picker></picker>
           <div class="examples">
-            <div class="bannerTxt">排水专题</div>
             <div class="bannerBox">
               <div class="swiper-container">
               <div class="swiper-wrapper">
@@ -38,15 +38,9 @@
                 <div class="swiper-slide">
                   <div class="therains">
                     <label class="therain-info"><span>积水点信息</span></label>
-                    <div class="option1">
-                      <linegraph :id="'bargrapht'" :data="option5"></linegraph>
-                    </div>
-                    <div class="option2">
-                      <linegraph :id="'bargraphy'" :data="option6"></linegraph>
-                    </div>
-                    <label class="ththeroad-footer">巡检班次：3241次</label>
-                    <label class="ththeroad-footer">巡检上报：1921次</label>
-                    <label class="ththeroad-footer">抢修维护：1534次</label>
+                    <label class="therain-num"><span>总数：</span></label>
+                    <label class="therain-title"><span>结构性缺陷</span></label>
+                    <div id="myChart" :style="{width: '300px', height: '300px'}"></div>
                   </div>
                 </div>
         </div>
@@ -57,6 +51,7 @@
     </div>
 </template>
 <script>
+import picker from './mouth'
 import Swiper from 'swiper' 
 import linegraph from './echartscom.vue'
 import 'swiper/css/swiper.css';
@@ -95,84 +90,6 @@ export default {
           type: 'bar'
         }]
       },
-      option5:{
-        color: ['#48C6F5','#E4E4E4'],
-        title:{
-          text:'解决率',
-          x:'20%',
-          y: '26%',
-          textStyle:{
-            fontWeight:'normal',
-            fontSize:12,
-            color:'#707070'
-          },
-        },
-        legend: [{
-	        top: '70%',
-          left: 'center',  
-          orient: "vertical",      
-          formatter: function(name) {
-              // 获取legend显示内容
-              // let as = option
-               return name;
-          },
-          data:[{name:'解决率',icon:'circle'}],
-	      }],
-        series:[{
-          name:'解决率',
-          type:'pie',
-          center: ['60%', '30%'],
-          radius:['30%','40%'],
-          avoidLabelOverlap: false,
-          data:[{value:700, name:'成功'},{value:400,name:'失败'}],
-          itemStyle:{ 
-            normal:{
-              label:{
-                show:false,
-              },
-              labelLine :{show:false} 
-            }
-          }
-        }]
-      },
-      option6:{
-        color: ['#FF5050','#FF9C68'],
-        title:{
-          text:'报警类型',
-          x:'20%',
-          y: '26%',
-          textStyle:{
-            fontWeight:'normal',
-            fontSize:12,
-            color:'#707070'
-          },
-        },
-        legend: [{
-	        top: '70%',
-          left: 'center',  
-          orient: "vertical",      
-          formatter: function(name) {
-               return name;
-          },
-          data:[{name:'维护',icon:'circle'},{name:'事故抢修',icon:'circle'}],
-	      }],
-          series:[{
-            name:'报警类型',
-            type:'pie',
-            center: ['60%', '30%'],
-            radius:['30%','40%'],
-            avoidLabelOverlap: false,
-            data:[{value:700, name:'维护'},{value:400,name:'事故抢修'}],
-            itemStyle:{ 
-              normal:{
-              label:{
-                show:false,
-              },
-              labelLine :{show:false} 
-              }
-          }
-            }]
-      },
     }
   },
   mounted:function(){
@@ -185,9 +102,54 @@ export default {
           spaceBetween: 20, // 在slide之间设置距离（单位px）。
           loopAdditionaSlider: 0, 
     });
-  },  
-  components: {linegraph},  
-   
+    this.drawLine();
+  }, 
+  methods:{
+    drawLine(){
+        // 基于准备好的dom，初始化echarts实例
+        let myChart = this.$echarts.init(document.getElementById('myChart'))
+        // 绘制图表
+        this.axios.get('http://192.168.2.218:8080/sewage/monitorDevice/selectProblems?month=1').then(res => {
+          const data = res.data.data;
+          this.goods = data.data[0].value
+          this.good = data.data
+          if(this.goods == 0){
+            this.good = [{value:500, name:'成功'},{value:500,name:'失败'}]
+          }
+          console.log(data);
+          myChart.setOption({
+          color: ['#48C6F5','#E4E4E4'],
+          title:{
+            text:'积水类型',
+            x:'40%',
+            y: '36%',
+              textStyle:{
+                fontWeight:'normal',
+                fontSize:17,
+                color:'#707070'
+              },
+            },
+          series:[{
+            name:'积水类型',
+            type:'pie',
+            center: ['50%', '40%'],
+            radius:['40%','60%'],
+            avoidLabelOverlap: false,
+            data:this.good,
+            itemStyle:{ 
+              normal:{
+                label:{
+                  show:false,
+                },
+                labelLine :{show:false} 
+              }
+            }
+          }]
+        });
+      })
+    }
+  },
+  components: {linegraph,picker},   
 }
 </script>
 <style lang="scss" scoped>
@@ -295,5 +257,18 @@ export default {
     opacity:1;
     margin-left: 20%;
   }
+}
+.therain-num{
+  display: inline-block;
+  width:86px;
+  height:46px;
+  border:1px solid rgba(155,78,255,1);
+  box-shadow:0px 3px 6px rgba(0,0,0,0.16);
+  opacity:1;
+  border-radius:14px;
+}
+.therain-title{
+  display: block;
+  margin-top: 30px;
 }
 </style>
