@@ -5,7 +5,8 @@
                 <mt-button icon="back"></mt-button>
             </a>
         </mt-header>
-        <div class="management-conetnt">           
+        <div class="management-conetnt">  
+           <picker @fuck="childMethod($event)"  ref="mychild"></picker>          
                 <div class="examples">
                     <div class="bannerBox">
                         <div class="swiper-container">
@@ -53,6 +54,7 @@
     </div>
 </template>
 <script>
+import picker from './mouth'
 import Swiper from 'swiper' 
 import linegraph from './echartscom.vue'
 import 'swiper/css/swiper.css';
@@ -265,8 +267,7 @@ export default {
           loopAdditionaSlider: 0, 
     });
   },  
-  components: {linegraph},  
-   
+  components: {linegraph,picker},  
 }
 </script>
 <style lang="scss" scoped>

@@ -11,11 +11,12 @@
           }
       },
       watch:{
-          data:{
-            handler(newvalue,oldvalue) {
-              this.drawLineGraph(this.id,newvalue);
-              this.setOption(datalist7)
-            }
+          ChartLineGraph(val, oldVal) {
+            // handler(newvalue,oldvalue) {
+              console.log(this.ChartLineGraph)
+              this.ChartLineGraph.clear()
+              this.drawLineGraph(this.id,this.data);
+            // }
           },
           deep:true
       },
@@ -29,8 +30,13 @@
           let _this = this;
           let myChart = document.getElementById(id)
           this.ChartLineGraph = this.$echarts.init(myChart)
-          _this.ChartLineGraph.clear();
+          // _this.ChartLineGraph.clear();
           this.ChartLineGraph.setOption(data);
+          this.$emit("echarts",{
+            ChartLineGraph:this.ChartLineGraph,
+            id,
+            data
+          })
           window.addEventListener("resize",function () {
             _this.ChartLineGraph.resize();
           })

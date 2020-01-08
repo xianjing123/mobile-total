@@ -69,7 +69,7 @@
                                 <span>积水</span>
                               </label>
                               <div class="ponding-option1">
-                                <linegraph :id="'bargrapha'" :data="option7" v-if="datalist7.length"></linegraph>
+                                <linegraph :id="'bargrapha'" :data="option7" v-if="datalist7.length" @echarts=echartsEvent($event)></linegraph>
                               </div>
                               <div class="ponding-option2">
                                 <linegraph :id="'bargraphf'" :data="option8" v-if="datalist8.length"></linegraph>
@@ -618,6 +618,7 @@ export default {
       datalist7:[],
       datalist8:[],
       swipers:'',
+      datas:null
     }
   },
   methods:{
@@ -644,6 +645,9 @@ export default {
           
         }
         
+      },
+      echartsEvent (data,id,haha){
+        this.datas = data
       }
   },
   mounted:function(){
@@ -678,15 +682,9 @@ export default {
   },
   watch:{
     datalist7(val, oldVal) {
-      let _this = this
-      // console.log(1111, val);
-      // var arrs = []
-      // val.forEach(item=>{
-      //       arrs.push(item.value)
-      // })
-      // alert(1)
-      // _this.$nextTick(val)
-      // this.option7.clear();
+      let _this = this;
+      this.datas.ChartLineGraph.clear();
+      this.datas.ChartLineGraph.setOption(this.datas.data)
     }
 
   },

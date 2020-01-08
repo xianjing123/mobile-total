@@ -55,27 +55,27 @@ export default {
 }
 .management{
   width: 100%;
-  height: 25%;
+  height: 30%;
   background: #3C9BFA;
   border-radius: 20px;
 }
 .drainage{
   width: 100%;
-  height: 25%;
+  height: 30%;
   background: #994AFF;
   border-radius: 20px;
   margin-top: -30px;
 }
 .road{
   width: 100%;
-  height: 25%;
+  height: 30%;
   background: #7167F5;
   border-radius: 20px;
   margin-top: -30px;
 }
 .bridge{
   width: 100%;
-  height: 25%;
+  height: 30%;
   background: #23BFAB;
   border-radius: 20px;
   margin-top: -30px;
