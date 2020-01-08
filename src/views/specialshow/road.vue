@@ -5,7 +5,8 @@
                 <mt-button icon="back"></mt-button>
             </a>
         </mt-header>
-        <div class="management-conetnt">           
+        <div class="management-conetnt">  
+           <picker @fuck="childMethod($event)"  ref="mychild"></picker>          
                 <div class="examples">
                     <div class="bannerBox">
                         <div class="swiper-container">
@@ -26,24 +27,7 @@
                                     <label class="ththeroad-footer">巡检上报：1921次</label>
                                     <label class="ththeroad-footer">抢修维护：1534次</label>
                                 </div>                            
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="theroad">
-                                <label class="theroad-head">
-                                    <!-- <img src="../assets/managements.png"> -->
-                                    <span>泵站</span>
-                                </label>
-                                <div class="option1">
-                                    <linegraph :id="'bargraphw'" :data="option3"></linegraph>
-                                </div>
-                                <div class="option2">
-                                    <linegraph :id="'bargraphse'" :data="option4"></linegraph>
-                                </div>
-                                    <label class="ththeroad-footer">巡检班次：3241次</label>
-                                    <label class="ththeroad-footer">巡检上报：1921次</label>
-                                    <label class="ththeroad-footer">抢修维护：1534次</label>
-                                </div> 
-                            </div>
+                            </div>             
                         </div>
                         </div>
                     </div> 
@@ -53,6 +37,7 @@
     </div>
 </template>
 <script>
+import picker from './mouth'
 import Swiper from 'swiper' 
 import linegraph from './echartscom.vue'
 import 'swiper/css/swiper.css';
@@ -255,18 +240,17 @@ export default {
     }
   },
   mounted:function(){
-    new Swiper('.swiper-container', {
-          direction: 'horizontal', //滑动方向，可设置水平(horizontal)或垂直(vertical)。
-          loop: true, // 设置为true 则开启loop模式
-          autoplay: 1000, // 自动切换时间
-          slidesPerView: 'auto', // 设置slider容器能够同时显示的slides数量(carousel模式)。类型：number or auto
-          centeredSlides: true, // 设定为true时，active slide会居中，而不是默认状态下的居左。
-          spaceBetween: 20, // 在slide之间设置距离（单位px）。
-          loopAdditionaSlider: 0, 
-    });
+    // new Swiper('.swiper-container', {
+    //       direction: 'horizontal', //滑动方向，可设置水平(horizontal)或垂直(vertical)。
+    //       loop: true, // 设置为true 则开启loop模式
+    //       autoplay: 1000, // 自动切换时间
+    //       slidesPerView: 'auto', // 设置slider容器能够同时显示的slides数量(carousel模式)。类型：number or auto
+    //       centeredSlides: true, // 设定为true时，active slide会居中，而不是默认状态下的居左。
+    //       spaceBetween: 20, // 在slide之间设置距离（单位px）。
+    //       loopAdditionaSlider: 0, 
+    // });
   },  
-  components: {linegraph},  
-   
+  components: {linegraph,picker},  
 }
 </script>
 <style lang="scss" scoped>
@@ -414,5 +398,8 @@ export default {
     opacity:1;
     margin-left: 20%;
   }
+}
+.swiper-wrapper{
+transform: translate3d(40px, 0, 0);
 }
 </style>

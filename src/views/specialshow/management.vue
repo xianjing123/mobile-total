@@ -5,14 +5,12 @@
                 <mt-button icon="back"></mt-button>
             </a>
         </mt-header>
-        <div class="management-conetnt">           
+        <div class="management-conetnt">  
+            <picker @fuck="childMethod($event)"  ref="mychild"></picker>         
                 <div class="examples">
-                <div class="bannerTxt">
-                    {{bannerTxt}}
-                </div>
                 <div class="bannerBox">
                     <div class="swiper-container">
-                    <div class="swiper-wrapper">
+                    <div class="swiper-wrapper" ref="mySwiper">
                         <div class="swiper-slide">
                             <div class="theroad">
                               <label class="theroad-head">
@@ -71,10 +69,10 @@
                                 <span>积水</span>
                               </label>
                               <div class="ponding-option1">
-                                <linegraph :id="'bargrapha'" :data="option7"></linegraph>
+                                <linegraph :id="'bargrapha'" :data="option7" v-if="datalist7.length" @echarts=echartsEvent($event)></linegraph>
                               </div>
                               <div class="ponding-option2">
-                                <linegraph :id="'bargraphf'" :data="option8"></linegraph>
+                                <linegraph :id="'bargraphf'" :data="option8" v-if="datalist8.length"></linegraph>
                               </div>
                             </div>
                         </div>
@@ -103,12 +101,14 @@
     </div>
 </template>
 <script>
+import picker from './mouth'
 import Swiper from 'swiper' 
 import linegraph from './echartscom.vue'
 import 'swiper/css/swiper.css';
 export default {
   data () {
     return {
+      mounth:'1',
       bannerTxt: '长效治理专题',
       banner:[
         {picture_path:'1'},
@@ -394,32 +394,108 @@ export default {
             }]
       },
       option7:{
+        title:{
+          text:'二级告警数量统计',
+          left:'0',
+        },
+        legend: {
+          data: ['参数值'],
+          align: 'left',
+          x: "right"
+        },
         xAxis: {
           type: 'category',
+          name: "时间",
           boundaryGap: false,
-          data: ['0', '2', '4', '6', '8', '10', '12','14','16','18','20','22','24']
+          nameTextStyle:{
+           align:'center'
+          },
+          data: ['0', '2', '4', '6', '8', '10', '12', '14', '16', '18', '20', '22', '24'],
+          splitLine: {
+            show: true,
+            lineStyle: {
+              width: 1,
+              type: 'dashed'
+            }
+          }
         },
         yAxis: {
-          type: 'value'
+          name: "数量/次",
+          nameTextStyle: {
+            padding: [0, 0, 0,10]    // 四个数字分别为上右下左与原位置距离
+          },
+          type: 'value',
+          splitLine: {
+            show: true,
+              lineStyle: {
+                width: 1,
+                type: 'dashed'
+              }
+          }
         },
         series: [{
-            data: [820, 932, 901, 934, 1290, 1330, 1320,901,901,901,901,901,901],
-            type: 'line',
-            areaStyle: {}
-        }]
+          name: "参数值",
+          data: [],
+          type: 'line',
+          areaStyle: {}
+        }],
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [{
+            offset: 0,
+            color: '#B1D6FD' // 0% 处的颜色
+          },{
+            offset: 1,
+            color: 'white' // 100% 处的颜色
+          }],
+          globalCoord: false // 缺省为 false
+        },
+        lineStyle: {
+          color: "#3196FA"
+        }
       },
       option8:{
+        legend: {
+          data: ['参数值'],
+          align: 'left',
+          x: "right"
+          },
         xAxis: {
           type: 'category',
-          data: ['1#积水点', '2#积水点', '3#积水点', '4#积水点']
+          data: ['1#', '2#', '3#', '4#'],
+          fontSize: 12,
         },
         yAxis: {
           type: 'value'
         },
         series: [{
-          data: [120, 200, 150, 80],
-          type: 'bar'
-        }]
+            name: "参数值",
+            data: [120, 200, 150, 80],
+            type: 'bar',
+            barWidth: 30,
+        }],
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [{
+            offset: 0,
+            color: '#B1D6FD' // 0% 处的颜色
+          }, {
+            offset: 1,
+            color: 'white' // 100% 处的颜色
+          }],
+          globalCoord: false // 缺省为 false
+        },
+        lineStyle: {
+          color: "#3196FA"
+        }
       },
       option9:{
         color: ['#4CA1F3','#D9D9D9'],
@@ -435,14 +511,14 @@ export default {
         },
         legend: [{
 	        top: '0%',
-          left: '0%',  
+          left: '10%',  
           orient: "vertical",      
           formatter: function(name) {
               // 获取legend显示内容
               // let as = option
                return name;
           },
-          data:[{name:'维护',icon:'circle'},{name:'事故抢修',icon:'circle'}],
+          data:[{name:'问题数量',icon:'circle'},{name:'改造数量',icon:'circle'}],
 	      }],
         series:[{
           name:'报警类型',
@@ -450,7 +526,7 @@ export default {
           radius:['50%','70%'],
           center: ['80%', '40%'],
           avoidLabelOverlap: false,         
-          data:[{value:700, name:'维护'},{value:400,name:'事故抢修'}],
+          data:[{value:700, name:'问题数量'},{value:400,name:'改造数量'}],
           itemStyle:{ 
             normal:{
               label:{
@@ -475,12 +551,14 @@ export default {
         },
         legend: [{
 	        top: '0%',
-          left: '0%',  
+          left: '10%',  
           orient: "vertical",      
           formatter: function(name) {
-            return name;
+              // 获取legend显示内容
+              // let as = option
+               return name;
           },
-          data:[{name:'维护',icon:'circle'},{name:'事故抢修',icon:'circle'}],
+          data:[{name:'问题数量',icon:'circle'},{name:'改造数量',icon:'circle'}],
 	      }],
         series:[{
           name:'报警类型',
@@ -513,12 +591,12 @@ export default {
         },
         legend: [{
 	        top: '0%',
-          left: '0%',  
+          left: '10%',  
           orient: "vertical",      
           formatter: function(name) {
             return name;
           },
-          data:[{name:'维护',icon:'circle'},{name:'事故抢修',icon:'circle'}],
+          data:[{name:'问题数量',icon:'circle'},{name:'改造数量',icon:'circle'}],
 	      }],
         series:[{
           name:'报警类型',
@@ -537,9 +615,43 @@ export default {
         }
         }]
       },
+      datalist7:[],
+      datalist8:[],
+      swipers:'',
+      datas:null
     }
   },
+  methods:{
+      childMethod(evt) {
+        var _this = this; `这一步很重要`
+        _this.mounth = evt
+        // alert(this.swipers)
+        if(_this.swipers == 0){//这是道路
+
+        }else if(_this.swipers == 1){//这是泵站
+
+        }else if(_this.swipers == 2){//这是桥梁
+          
+        }else if(_this.swipers == 3){//这是积水
+          _this.axios.get('http://218.75.49.82:9997/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
+            const data = res.data.data
+            let deviceCharts = data.deviceCharts
+            _this.datalist8 = data.deviceCharts
+            _this.datalist7 = data.warnCountCharts
+            _this.option7.series[0].data=_this.datalist7;
+            _this.option8.series[0].data=_this.datalist8;
+          })
+        }else if(_this.swipers == 4){//这是污水直排
+          
+        }
+        
+      },
+      echartsEvent (data,id,haha){
+        this.datas = data
+      }
+  },
   mounted:function(){
+    var that = this
     new Swiper('.swiper-container', {
           direction: 'horizontal', //滑动方向，可设置水平(horizontal)或垂直(vertical)。
           loop: true, // 设置为true 则开启loop模式
@@ -548,9 +660,35 @@ export default {
           centeredSlides: true, // 设定为true时，active slide会居中，而不是默认状态下的居左。
           spaceBetween: 20, // 在slide之间设置距离（单位px）。
           loopAdditionaSlider: 0, 
+          initialSlide:0,
+          on: {
+            slideChangeTransitionStart: function(item) {
+              that.swipers = this.realIndex;
+            },
+          }
     });
-  },  
-  components: {linegraph},  
+    this.$nextTick(function(){
+      var _this = this; `这一步很重要`
+      _this.axios.get('http://218.75.49.82:9997/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
+        const data = res.data.data
+        let deviceCharts = data.deviceCharts
+        _this.datalist8 = data.deviceCharts
+        _this.datalist7 = data.warnCountCharts
+        _this.option7.series[0].data=_this.datalist7;
+        _this.option8.series[0].data=_this.datalist8;
+        
+      })
+    })
+  },
+  watch:{
+    datalist7(val, oldVal) {
+      let _this = this;
+      this.datas.ChartLineGraph.clear();
+      this.datas.ChartLineGraph.setOption(this.datas.data)
+    }
+
+  },
+  components: {linegraph,picker},  
    
 }
 </script>
@@ -684,7 +822,7 @@ export default {
   text-align: left;
   margin: 0 auto;
   margin-top: 10%;
-  background-image: url("/imgs/sewage.png");
+  background-image: url("/imgs/sewage (2).png");
   background-repeat: no-repeat;
   background-position: 10% 0;
   span{
