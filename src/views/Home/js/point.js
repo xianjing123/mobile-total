@@ -1,5 +1,6 @@
 import esriLoader from "esri-loader";
 import map from './map'
+//公共状态
 var active = false;
 var graphicsLayer1;
 var pipeServer;
@@ -172,10 +173,12 @@ function normalStation(node, mapActive) {
         view.on('click', e => {
           view.hitTest(e).then(res => {
             if (res.results.length) {
-              node.style.display = "block"
-              view.goTo(e.mapPoint)
-              node.lastChild.onclick = function () {
-                node.style.display = 'none'
+              if(res.results[0].graphic.geometry.type==="point"){
+                node.style.display = "block"
+                view.goTo(e.mapPoint)
+                node.lastChild.onclick = function () {
+                  node.style.display = 'none'
+                }
               }
             } else {
               node.style.display = "none"
