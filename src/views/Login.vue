@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { setCookie } from "../components/cookie";
+import { setCookie, getCookie, removeCookie } from "../components/cookie";
 import { Encrypt, Decrypt } from '../components/secret'
 import axios from "axios";
 export default {
@@ -82,10 +82,10 @@ export default {
     loading () {
       if(!this.loading){
         this.$nextTick(()=>{
-          if(localStorage.getItem("username")){
-            this.username = Decrypt(localStorage.getItem("username"))
-            if(localStorage.getItem("password")){
-              this.password = Decrypt(localStorage.getItem("password"))
+          if(getCookie("username")){
+            this.username = Decrypt(getCookie("username"))
+            if(getCookie("password")){
+              this.password = Decrypt(getCookie("password"))
             }
           }
         })
@@ -95,24 +95,25 @@ export default {
   methods: {
     //点击登录
     LoginTo() {
-      if (this.$refs.username.value === "") {
+      if (this.username === "") {
         this.$refs.usernameBlock.style.border = "1px solid orange";
       }
-      if (this.$refs.password.value === "") {
+      if (this.password === "") {
         this.$refs.passwordBlock.style.border = "1px solid orange";
       }
       if (
-        this.$refs.username.value === "" ||
-        this.$refs.password.value === ""
+        this.username === "" ||
+        this.password === ""
       ) {
         return;
       }
       if(this.isRemember){
-        localStorage.setItem("username",Encrypt(this.$refs.username.value))
-        localStorage.setItem("password",Encrypt(this.$refs.password.value))
+        setCookie("username",Encrypt(this.username),'/',30)
+        setCookie("password",Encrypt(this.password),'/',30)
       } else {
-        if(localStorage.getItem("username") && localStorage.getItem("password")){
-          localStorage.removeItem("password")
+        setCookie("username",Encrypt(this.username),'/',30)
+        if(getCookie("password")){
+          removeCookie("password")
         }
       }
       setCookie("token", "测试", "/", 1);
