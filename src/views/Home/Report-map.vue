@@ -21,11 +21,14 @@
         <p class="describe-text">详情描述</p>
         <div class="describe-input">
           <div class="describe-input_img">
-            <img src="/imgs/describe-img.png" alt />
+            <img src="/imgs/describe-img.png" alt ref="fileImg" />
           </div>
           <input type="text" class="describe-input_text" />
         </div>
-        <div class="describe-submit" @click="actionSheet">立即上传</div>
+        <label>
+          <input type="file" @change="fileChange" ref="file" style="display:none" />
+          <div class="describe-submit">立即上传</div>
+        </label>
       </div>
     </div>
     <div ref="chatBox" class="chat">
@@ -49,7 +52,8 @@ export default {
       area: "在地图确定问题位置", //地图点弹出层内容
       listShow: true, //管线描述提交
       sheetVisible: false, //立即上传-状态
-      actions: [ //导航栏内容
+      actions: [
+        //导航栏内容
         {
           name: "拍照",
           method: function(res) {
@@ -80,6 +84,14 @@ export default {
     //立即上传
     actionSheet() {
       this.sheetVisible = true;
+    },
+    fileChange() {
+      var that = this;
+      var reader = new FileReader();
+      reader.readAsDataURL(this.$refs.file.files[0]);
+      reader.onload = function() {
+        that.$refs.fileImg.src = reader.result; //base64格式
+      };
     }
   },
   mounted() {
@@ -169,12 +181,13 @@ export default {
     .describe-input {
       height: 0.88rem;
       .describe-input_img {
+        width: 0.88rem;
         height: 100%;
         float: left;
         border-radius: 0.2rem;
         overflow: hidden;
         img {
-          height: 100%;
+          width: 100%;
         }
       }
       .describe-input_text {

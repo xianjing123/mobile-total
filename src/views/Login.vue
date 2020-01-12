@@ -58,6 +58,7 @@
 
 <script>
 import { setCookie } from "../components/cookie";
+import { Encrypt, Decrypt } from '../components/secret'
 import axios from "axios";
 export default {
   data() {
@@ -72,14 +73,27 @@ export default {
     this.$store.commit("commitShow", false);
     setTimeout(() => {
       this.loading = false;
-    }, 2000);
+    }, 500);
   },
   destroyed() {
     this.$store.commit("commitShow", true);
   },
+  watch:{
+    loading () {
+      if(!this.loading){
+        this.$nextTick(()=>{
+          if(localStorage.getItem("username")){
+            this.username = Decrypt(localStorage.getItem("username"))
+            if(localStorage.getItem("password")){
+              this.password = Decrypt(localStorage.getItem("password"))
+            }
+          }
+        })
+      }
+    }
+  },
   methods: {
     //点击登录
-
     LoginTo() {
       if (this.$refs.username.value === "") {
         this.$refs.usernameBlock.style.border = "1px solid orange";
@@ -93,6 +107,16 @@ export default {
       ) {
         return;
       }
+      if(this.isRemember){
+        localStorage.setItem("username",Encrypt(this.$refs.username.value))
+        localStorage.setItem("password",Encrypt(this.$refs.password.value))
+      } else {
+        if(localStorage.getItem("username") && localStorage.getItem("password")){
+          localStorage.removeItem("password")
+        }
+      }
+      setCookie("token", "测试", "/", 1);
+      this.$router.push("/home");
       axios
         .post(this.$store.state.urls + "security/subject/login", {
           username: this.username,
