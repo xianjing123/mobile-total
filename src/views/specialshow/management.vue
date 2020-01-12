@@ -72,7 +72,7 @@
                                 <linegraph :id="'bargrapha'" :data="option7" v-if="datalist7.length" @echarts=echartsEvent($event)></linegraph>
                               </div>
                               <div class="ponding-option2">
-                                <linegraph :id="'bargraphf'" :data="option8" v-if="datalist8.length"></linegraph>
+                                <linegraph :id="'bargraphf'" :data="option8" v-if="datalist8.length" @echarts=echartsEvent8($event)></linegraph>
                               </div>
                             </div>
                         </div>
@@ -83,13 +83,13 @@
                                 <span>污水零直排</span>
                               </label>
                               <div class="sewage-option1">
-                                <linegraph :id="'bargraphj'" :data="option9"></linegraph>
+                                <linegraph :id="'bargraphj'" :data="option9" @echarts=echartsEvent9($event)></linegraph>
                               </div>
                               <div class="sewage-option2">
-                                <linegraph :id="'bargraphl'" :data="option11"></linegraph>
+                                <linegraph :id="'bargraphl'" :data="option11" @echarts=echartsEvent11($event)></linegraph>
                               </div>
                               <div class="sewage-option3">
-                                <linegraph :id="'bargraphjq'" :data="option12"></linegraph>
+                                <linegraph :id="'bargraphjq'" :data="option12" @echarts=echartsEvent12($event)></linegraph>
                               </div>
                             </div> 
                         </div>
@@ -108,6 +108,7 @@ import 'swiper/css/swiper.css';
 export default {
   data () {
     return {
+      url:'http://192.168.2.179:8080',
       mounth:'1',
       bannerTxt: '长效治理专题',
       banner:[
@@ -499,32 +500,38 @@ export default {
       },
       option9:{
         color: ['#4CA1F3','#D9D9D9'],
-        title:{
-          text:'改造率',
-          x:'72%',
-          y: '30%',
+        title: {
+          text: '结构性缺陷',
+          subtext: '改造率',
+          x:"10%",
           textStyle:{
-            fontWeight:'normal',
-            fontSize:12,
-            color:'#707070'
+            fontSize: 12,
+            color :'#4CA1F3',          
+          },
+          subtextStyle:{
+            align: 'right',
+              rich: {
+              a: {
+              }
+            }
           },
         },
         legend: [{
-	        top: '0%',
-          left: '10%',  
-          orient: "vertical",      
+	        top: '30%',
+          left: '0%',  
+          orient: "vertical", 
+          selectedMode:"false",
+          data:['问题数量','改造数量','改造率'],  
+          icon:'none',  
           formatter: function(name) {
-              // 获取legend显示内容
-              // let as = option
-               return name;
-          },
-          data:[{name:'问题数量',icon:'circle'},{name:'改造数量',icon:'circle'}],
+            return name
+          }
 	      }],
         series:[{
           name:'报警类型',
           type:'pie',
           radius:['50%','70%'],
-          center: ['80%', '40%'],
+          center: ['70%', '40%'],
           avoidLabelOverlap: false,         
           data:[{value:700, name:'问题数量'},{value:400,name:'改造数量'}],
           itemStyle:{ 
@@ -539,31 +546,38 @@ export default {
       },
       option11:{
         color: ['#48C6F5','#D9D9D9'],
-        title:{
-          text:'改造率',
-          x:'72%',
-          y: '30%',
+        title: {
+          text: '功能性缺陷',
+          subtext: '改造率',
+          x:"10%",
           textStyle:{
-            fontWeight:'normal',
-            fontSize:12,
-            color:'#707070'
+            fontSize: 12,
+            color :'#4CA1F3',          
+          },
+          subtextStyle:{
+            align: 'right',
+              rich: {
+              a: {
+              }
+            }
           },
         },
         legend: [{
-	        top: '0%',
-          left: '10%',  
-          orient: "vertical",      
+	        top: '30%',
+          left: '0%',  
+          orient: "vertical",
+          data:['问题数量','改造数量','改造率'],  
+          icon:'none',   
           formatter: function(name) {
               // 获取legend显示内容
               // let as = option
                return name;
           },
-          data:[{name:'问题数量',icon:'circle'},{name:'改造数量',icon:'circle'}],
 	      }],
         series:[{
           name:'报警类型',
           type:'pie',
-          center: ['80%', '35%'],
+          center: ['70%', '35%'],
           radius:['50%','70%'],
           avoidLabelOverlap: false,         
           data:[{value:700, name:'问题数量'},{value:400,name:'改造数量'}],
@@ -579,29 +593,36 @@ export default {
       },
       option12:{
         color: ['#5050FF','#D9D9D9'],
-        title:{
-          text:'改造率',
-          x:'72%',
-          y: '30%',
+        title: {
+          text: '雨污混排',
+          subtext: '改造率',
+          x:"10%",
           textStyle:{
-            fontWeight:'normal',
-            fontSize:12,
-            color:'#707070'
+            fontSize: 13,
+            color :'#5050FF',          
+          },
+          subtextStyle:{
+            align: 'right',
+              rich: {
+              a: {
+              }
+            }
           },
         },
         legend: [{
-	        top: '0%',
-          left: '10%',  
-          orient: "vertical",      
+	        top: '30%',
+          left: '0%',  
+          orient: "vertical", 
+          data:['问题数量','改造数量','改造率'],  
+          icon:'none',     
           formatter: function(name) {
             return name;
           },
-          data:[{name:'问题数量',icon:'circle'},{name:'改造数量',icon:'circle'}],
 	      }],
         series:[{
           name:'报警类型',
           type:'pie',
-          center: ['80%', '35%'],
+          center: ['70%', '35%'],
           radius:['50%','70%'],
           avoidLabelOverlap: false,         
           data:[{value:700, name:'问题数量'},{value:400,name:'改造数量'}],
@@ -615,10 +636,17 @@ export default {
         }
         }]
       },
+      swipers:'',
       datalist7:[],
       datalist8:[],
-      swipers:'',
-      datas:null
+      data7:null,
+      data8:null,
+      datalist9:[],
+      data9:null,
+      datalist11:[],
+      data11:null,
+      datalist12:[],
+      data12:null,
     }
   },
   methods:{
@@ -633,7 +661,7 @@ export default {
         }else if(_this.swipers == 2){//这是桥梁
           
         }else if(_this.swipers == 3){//这是积水
-          _this.axios.get('http://218.75.49.82:9997/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
+          _this.axios.get(''+_this.url+'/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
             const data = res.data.data
             let deviceCharts = data.deviceCharts
             _this.datalist8 = data.deviceCharts
@@ -642,12 +670,32 @@ export default {
             _this.option8.series[0].data=_this.datalist8;
           })
         }else if(_this.swipers == 4){//这是污水直排
-          
+          _this.axios.get(''+_this.url+'/sewage/monitorDevice/selectRectifySewage?month='+_this.mounth+'').then(res => {     
+            const data = res.data.data
+            _this.datalist9 = data.structural
+            _this.datalist11 = data.functional
+            _this.datalist12 = data.RainAndDirt
+            _this.option9.series[0].data=_this.datalist9;
+            _this.option11.series[0].data=_this.datalist11;
+            _this.option12.series[0].data=_this.datalist12;
+          })
         }
         
       },
       echartsEvent (data,id,haha){
-        this.datas = data
+        this.data7 = data
+      },
+      echartsEvent8 (data,id,haha){
+        this.data8 = data
+      },
+      echartsEvent9 (data,id,haha){
+        this.data9 = data
+      },
+      echartsEvent11 (data,id,haha){
+        this.data11 = data
+      },
+      echartsEvent12 (data,id,haha){
+        this.data12 = data
       }
   },
   mounted:function(){
@@ -669,7 +717,7 @@ export default {
     });
     this.$nextTick(function(){
       var _this = this; `这一步很重要`
-      _this.axios.get('http://218.75.49.82:9997/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
+      _this.axios.get(''+_this.url+'/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
         const data = res.data.data
         let deviceCharts = data.deviceCharts
         _this.datalist8 = data.deviceCharts
@@ -683,10 +731,20 @@ export default {
   watch:{
     datalist7(val, oldVal) {
       let _this = this;
-      this.datas.ChartLineGraph.clear();
-      this.datas.ChartLineGraph.setOption(this.datas.data)
-    }
-
+      this.data7.ChartLineGraph.clear();
+      this.data7.ChartLineGraph.setOption(this.data7.data);
+      this.data8.ChartLineGraph.clear();
+      this.data8.ChartLineGraph.setOption(this.data8.data)
+    },
+    datalist9(val, oldVal) {
+      let _this = this;
+      this.data9.ChartLineGraph.clear();
+      this.data9.ChartLineGraph.setOption(this.data9.data);
+      this.data11.ChartLineGraph.clear();
+      this.data11.ChartLineGraph.setOption(this.data11.data);
+      this.data12.ChartLineGraph.clear();
+      this.data12.ChartLineGraph.setOption(this.data12.data);
+    },
   },
   components: {linegraph,picker},  
    
