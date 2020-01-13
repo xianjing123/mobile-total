@@ -16,9 +16,9 @@
                     <label class="therain-head">
                       <span>雨水管网统计</span>
                     </label>
-                  <label class="ththeroad-footer">巡检班次：3241次</label>
-                  <label class="ththeroad-footer">巡检上报：1921次</label>
-                  <label class="ththeroad-footer">抢修维护：1534次</label>
+                  <label class="ththeroad-footer">雨水管网长度：39241 m</label>
+                  <label class="ththeroad-footer">检查井数量：392 个 m</label>
+                  <label class="ththeroad-footer">雨水篦数量：234 个 m</label>
                   <div class="option2">
                     <linegraph :id="'bargraphs'" :data="option"></linegraph>
                   </div>
@@ -27,11 +27,19 @@
                 <div class="swiper-slide">
                   <div class="therain">
                     <label class="therain-head"><span>污水管网统计</span></label>
-                    <label class="ththeroad-footer">巡检班次：3241次</label>
-                    <label class="ththeroad-footer">巡检上报：1921次</label>
-                    <label class="ththeroad-footer">抢修维护：1534次</label>
-                    <div class="option2">
+                    <label class="ththeroad-footer">污水管网长度：39241 m</label>
+                    <label class="ththeroad-footer">检查井数量：392 个</label>
+                    <div class="optionty">
                       <linegraph :id="'bargraphse'" :data="option3"></linegraph>
+                    </div>
+                    <div class="leng">
+                      <span>污水管网长度</span>
+                      <div class="leng-left"><span>总数232 个</span></div>
+                      <div class="leng-right">
+                        <span>雨水泵站数量：231 个</span>
+                        <span>污水泵站数量：232 个</span>
+                        <span>雨污水泵站数量：231 个</span>
+                      </div>
                     </div>
                   </div> 
                 </div>
@@ -58,29 +66,55 @@ import 'swiper/css/swiper.css';
 export default {
   data () {
     return {
-      banner:[
-        {picture_path:'1'},
-        {picture_path:'2'},
-        {picture_path:'3'},
-        {picture_path:'4'}
-      ],
       option:{
         xAxis: {
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          data: ['舞阳', '振兴', '春晖', '304立交桥'],
+          splitLine: {
+            show: true,
+            lineStyle: {
+              width: 1,
+              type: 'dashed'
+            }
+          }
         },
         yAxis: {
           type: 'value'
         },
         series: [{
-          data: [120, 200, 150, 80, 70, 110, 130],
+          data: [ 80, 70, 110, 130],
           type: 'bar'
-        }]
+        }],
+        color: {
+          type: 'linear',
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [{
+            offset: 0,
+            color: '#B1D6FD' // 0% 处的颜色
+          },{
+            offset: 1,
+            color: 'white' // 100% 处的颜色
+          }],
+          globalCoord: false // 缺省为 false
+        },
+        lineStyle: {
+          color: "#3196FA"
+        }
       },
       option3:{
-       xAxis: {
+        xAxis: {
           type: 'category',
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          data: ['舞阳', '振兴', '春晖', '304立交桥',],
+          splitLine: {
+            show: true,
+            lineStyle: {
+              width: 1,
+              type: 'dashed'
+            }
+          }
         },
         yAxis: {
           type: 'value'
@@ -168,7 +202,7 @@ export default {
     height: 100%;
 } 
 .therain{
-  .option1,.option2{
+  .option2{
     float: left;
     margin-top: 0%;
     width: 100%;
@@ -219,7 +253,7 @@ export default {
   overflow: hidden;
 }
 .therains{
-  .option1,.option2{
+  .option1{
     float: left;
     margin-top: 0%;
     width: 100%;
@@ -230,6 +264,21 @@ export default {
       div{
         width: 100%!important;
         height: 100%!important;
+        margin-top: -100%!important;
+      }
+    }
+  }
+}
+.therain{
+.optionty{
+    float: left;
+    margin-top: -10%;
+    width: 100%;
+    height: 58%;
+    div{
+      width: 100%;
+      height: 80%;
+      div{
         margin-top: -100%!important;
       }
     }
@@ -258,6 +307,9 @@ export default {
     margin-left: 20%;
   }
 }
+#bargraphse{
+  height: 80%;
+}
 .therain-num{
   display: inline-block;
   width:86px;
@@ -270,5 +322,56 @@ export default {
 .therain-title{
   display: block;
   margin-top: 30px;
+}
+.leng{
+  float: left;
+  width: 100%;
+  height: 30%;
+  margin-top: -26%;
+  span{
+    float: left;
+    width:100%;
+    height:13px;
+    font-size:9px;
+    margin-left: 10%;
+    text-align: left;
+    font-family:PingFang SC;
+    font-weight:400;
+    line-height:13px;
+    color:rgba(73,73,73,1);
+    opacity:1;
+  }
+  div{
+    float: left;
+    width: 50%;
+    height: 100%;
+    text-align: left;
+  }
+}
+.leng-left{
+  text-align: center;
+  margin-top: 20px;
+  span{
+    float: left;
+    width:86px;
+    height:46px;
+    font-size: 16px;
+    border:1px dashed rgba(155,78,255,1);
+    box-shadow:0px 3px 6px rgba(0,0,0,0.16);
+    opacity:1;
+    border-radius:14px;
+    text-align: center;
+    margin-left: 20%;
+    padding-top: 20px;
+  }
+}
+.leng-right{
+  margin-top: 20px;
+  span{
+    display: block;
+    width: 100%;
+   color: #9A4CFF;
+   line-height: 20px;
+  }
 }
 </style>
