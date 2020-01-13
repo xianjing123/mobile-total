@@ -368,10 +368,11 @@ export default {
 .leng-right{
   margin-top: 20px;
   span{
-    display: block;
-    width: 100%;
-   color: #9A4CFF;
-   line-height: 20px;
+  display: block;
+  width: 100%;
+  color: #9A4CFF;
+   line-height: 30px;
+   margin-top: 10px;
   }
 }
 </style>
