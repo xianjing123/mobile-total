@@ -18,14 +18,14 @@
                                 <span>道路</span>
                               </label>
                               <div class="option1">
-                                <linegraph :id="'bargraph'" :data="option"></linegraph>
+                                <linegraph :id="'bargraph'" :data="option1"  v-if="datalist1.length" @echarts=echartsEvent1($event)></linegraph>
                               </div>
                               <div class="option2">
-                                <linegraph :id="'bargraphs'" :data="option2"></linegraph>
+                                <linegraph :id="'bargraphs'" :data="option2"  v-if="datalist2.length" @echarts=echartsEvent2($event)></linegraph>
                               </div>
-                                <label class="ththeroad-footer">巡检班次：3241次</label>
-                                <label class="ththeroad-footer">巡检上报：1921次</label>
-                                <label class="ththeroad-footer">抢修维护：1534次</label>
+                                <label class="ththeroad-footer">巡检班次:{{shifts1}}次</label>
+                                <label class="ththeroad-footer">巡检上报:{{report1}}次</label>
+                                <label class="ththeroad-footer">抢修维护:{{maintain1}}次</label>
                             </div>                            
                         </div>
                         <div class="swiper-slide">
@@ -35,10 +35,10 @@
                                 <span>泵站</span>
                               </label>
                               <div class="option1">
-                                <linegraph :id="'bargraphw'" :data="option3"></linegraph>
+                                <linegraph :id="'bargraphw'" :data="option3"  v-if="datalist3.length" @echarts=echartsEvent3($event)></linegraph>
                               </div>
                               <div class="option2">
-                                <linegraph :id="'bargraphse'" :data="option4"></linegraph>
+                                <linegraph :id="'bargraphse'" :data="option4"  v-if="datalist4.length" @echarts=echartsEvent4($event)></linegraph>
                               </div>
                                 <label class="ththeroad-footer">巡检班次：3241次</label>
                                 <label class="ththeroad-footer">巡检上报：1921次</label>
@@ -52,14 +52,14 @@
                                 <span>桥梁</span>
                               </label>
                               <div class="option1">
-                                <linegraph :id="'bargrapht'" :data="option5"></linegraph>
+                                <linegraph :id="'bargrapht'" :data="option5" v-if="datalist5.length" @echarts=echartsEvent5($event)></linegraph>
                               </div>
                               <div class="option2">
-                                <linegraph :id="'bargraphy'" :data="option6"></linegraph>
+                                <linegraph :id="'bargraphy'" :data="option6" v-if="datalist6.length" @echarts=echartsEvent6($event)></linegraph>
                               </div>
-                                <label class="ththeroad-footer">巡检班次：3241次</label>
-                                <label class="ththeroad-footer">巡检上报：1921次</label>
-                                <label class="ththeroad-footer">抢修维护：1534次</label>
+                                <label class="ththeroad-footer">巡检班次:{{shifts3}}次</label>
+                                <label class="ththeroad-footer">巡检上报:{{report3}}次</label>
+                                <label class="ththeroad-footer">抢修维护:{{maintain3}}次</label>
                             </div>
                         </div>
                         <div class="swiper-slide">
@@ -83,13 +83,13 @@
                                 <span>污水零直排</span>
                               </label>
                               <div class="sewage-option1">
-                                <linegraph :id="'bargraphj'" :data="option9" @echarts=echartsEvent9($event)></linegraph>
+                                <linegraph :id="'bargraphj'" :data="option9" v-if="datalist9.length" @echarts=echartsEvent9($event)></linegraph>
                               </div>
                               <div class="sewage-option2">
-                                <linegraph :id="'bargraphl'" :data="option11" @echarts=echartsEvent11($event)></linegraph>
+                                <linegraph :id="'bargraphl'" :data="option11" v-if="datalist11.length" @echarts=echartsEvent11($event)></linegraph>
                               </div>
                               <div class="sewage-option3">
-                                <linegraph :id="'bargraphjq'" :data="option12" @echarts=echartsEvent12($event)></linegraph>
+                                <linegraph :id="'bargraphjq'" :data="option12" v-if="datalist12.length" @echarts=echartsEvent12($event)></linegraph>
                               </div>
                             </div> 
                         </div>
@@ -108,7 +108,7 @@ import 'swiper/css/swiper.css';
 export default {
   data () {
     return {
-      url:'http://192.168.2.179:8080',
+      url:'http://192.168.2.208:8080',
       mounth:'1',
       bannerTxt: '长效治理专题',
       banner:[
@@ -138,7 +138,7 @@ export default {
               // let as = option
                return name;
           },
-          data:[{name:'维护',icon:'circle'},{name:'事故抢修ss',icon:'circle'}],
+          data:[{name:'维护',icon:'circle'},{name:'事故抢修',icon:'circle'}],
 	      }],
         series:[{
           name:'报警类型',
@@ -146,7 +146,7 @@ export default {
           center: ['40%', '30%'],
           radius:['50%','70%'],
           avoidLabelOverlap: false,
-          data:[{value:700, name:'维护'},{value:400,name:'事故抢修ss'}],
+          data:[{value:700, name:'维护'},{value:400,name:'事故抢修'}],
           itemStyle:{ 
             normal:{
               label:{
@@ -163,7 +163,7 @@ export default {
           }    
         }]
       },
-      option:{
+      option1:{
         color: ['#48C6F5','#eeeeee'],
         title:{
           text:'解决率',
@@ -193,7 +193,7 @@ export default {
           radius:['50%','70%'],
           avoidLabelOverlap: false,
           selectedMode: false,       
-          data:[{value:600, name:'成功'},{value:400,name:'失败'}],
+          data:[{value:600, name:'解决前'},{value:900,name:'解决后'}],
           itemStyle:{ 
             normal:{
               label:{
@@ -636,7 +636,25 @@ export default {
         }
         }]
       },
+      shifts1:'',
+      report1:'',
+      maintain1:'',
+      shifts3:'',
+      report3:'',
+      maintain3:'',
       swipers:'',
+      datalist1:[],
+      data1:null,
+      datalist2:[],
+      data2:null,
+      datalist3:[],
+      data3:null,
+      datalist4:[],
+      data4:null,
+      datalist5:[],
+      data5:null,
+      datalist6:[],
+      data6:null,
       datalist7:[],
       datalist8:[],
       data7:null,
@@ -655,11 +673,35 @@ export default {
         _this.mounth = evt
         // alert(this.swipers)
         if(_this.swipers == 0){//这是道路
-
+          _this.axios.get(''+_this.url+'/way/road/mobileTerminalRoadDisplay?month='+_this.mounth+'').then(res => {     
+            const data = res.data.data         
+            _this.datalist1 = data.解决率图表
+            _this.datalist2 = data.报警类型表
+            _this.shifts1 = data.巡检班次
+            _this.report1 = data.巡检上报
+            _this.maintain1 = data.抢修维护
+            _this.option1.series[0].data=_this.datalist1;
+            _this.option2.series[0].data=_this.datalist2;
+          })
         }else if(_this.swipers == 1){//这是泵站
-
+          _this.axios.get(''+_this.url+'/station/pumpStationCaseManagement/getPumpData?month='+_this.mounth+'').then(res => {     
+            const data = res.data.data         
+            _this.datalist3 = data.解决率图表
+            _this.datalist4 = data.报警类型表
+            _this.option3.series[0].data=_this.datalist3;
+            _this.option4.series[0].data=_this.datalist4;
+          })
         }else if(_this.swipers == 2){//这是桥梁
-          
+          _this.axios.get(''+_this.url+'/way/bridge/mobileTerminalBridgeDisplay?month='+_this.mounth+'').then(res => {     
+            const data = res.data.data         
+            _this.datalist5 = data.解决率图表
+            _this.datalist6 = data.报警类型表
+            _this.shifts3 = data.巡检班次
+            _this.report3 = data.巡检上报
+            _this.maintain3 = data.抢修维护
+            _this.option5.series[0].data=_this.datalist5;
+            _this.option6.series[0].data=_this.datalist6;
+          })
         }else if(_this.swipers == 3){//这是积水
           _this.axios.get(''+_this.url+'/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
             const data = res.data.data
@@ -681,6 +723,24 @@ export default {
           })
         }
         
+      },
+      echartsEvent1 (data,id,haha){
+        this.data1 = data
+      },
+      echartsEvent2 (data,id,haha){
+        this.data2 = data
+      },
+      echartsEvent3 (data,id,haha){
+        this.data3 = data
+      },
+      echartsEvent4 (data,id,haha){
+        this.data4 = data
+      },
+      echartsEvent5 (data,id,haha){
+        this.data5 = data
+      },
+      echartsEvent6 (data,id,haha){
+        this.data6 = data
       },
       echartsEvent (data,id,haha){
         this.data7 = data
@@ -717,18 +777,40 @@ export default {
     });
     this.$nextTick(function(){
       var _this = this; `这一步很重要`
-      _this.axios.get(''+_this.url+'/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
-        const data = res.data.data
-        let deviceCharts = data.deviceCharts
-        _this.datalist8 = data.deviceCharts
-        _this.datalist7 = data.warnCountCharts
-        _this.option7.series[0].data=_this.datalist7;
-        _this.option8.series[0].data=_this.datalist8;
-        
+      _this.axios.get(''+_this.url+'/way/road/mobileTerminalRoadDisplay?month='+_this.mounth+'').then(res => {     
+        const data = res.data.data         
+        _this.datalist1 = data.解决率图表
+        _this.datalist2 = data.报警类型表
+        _this.shifts1 = data.巡检班次
+        _this.report1 = data.巡检上报
+        _this.maintain1 = data.抢修维护
+        _this.option1.series[0].data=_this.datalist1;
+        _this.option2.series[0].data=_this.datalist2;
       })
     })
   },
   watch:{
+    datalist1(val, oldVal) {
+      let _this = this;
+      this.data1.ChartLineGraph.clear();
+      this.data1.ChartLineGraph.setOption(this.data1.data);
+      this.data2.ChartLineGraph.clear();
+      this.data2.ChartLineGraph.setOption(this.data2.data);
+    },
+    datalist3(val, oldVal) {
+      let _this = this;
+      this.data3.ChartLineGraph.clear();
+      this.data3.ChartLineGraph.setOption(this.data3.data);
+      this.data4.ChartLineGraph.clear();
+      this.data4.ChartLineGraph.setOption(this.data4.data);
+    },
+    datalist5(val, oldVal) {
+      let _this = this;
+      this.data5.ChartLineGraph.clear();
+      this.data5.ChartLineGraph.setOption(this.data5.data);
+      this.data6.ChartLineGraph.clear();
+      this.data6.ChartLineGraph.setOption(this.data6.data);
+    },
     datalist7(val, oldVal) {
       let _this = this;
       this.data7.ChartLineGraph.clear();
