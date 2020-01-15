@@ -80,15 +80,8 @@ export default {
       ], //侧边栏内容
       actions: [
         {
-          name: "百度地图",
-          method: function() {
-            console.log("百度地图");
-          }
-        },
-        {
           name: "高德地图",
           method: function() {
-            console.log("高德地图");
             location.href =
               "https://uri.amap.com/marker?position=119.977401,30.54251&name=德清";
           }
@@ -338,7 +331,7 @@ export default {
 
                 //渲染点
                 function layerPointer(arr, number, int) {
-                  console.log(arr)
+                  // console.log(arr)
                   arr.forEach(item => {
                     var point = {
                       type: "point", // autocasts as new Point()

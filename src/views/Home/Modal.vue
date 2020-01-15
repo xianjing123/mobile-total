@@ -1,7 +1,7 @@
 <template>
   <div class="modal-total">
     <div class="modal" ref="modal">
-      <div class="modal-title" :class="datalist.wid?'normal-title':'police-title'">{{datalist.name||datalist.pumpStation}}</div>
+      <div class="modal-title" :class="datalist.wid?'police-title':'normal-title'">{{datalist.name||datalist.pumpStation}}</div>
       <div class="modal-main">
         <div class="modal-text">
           <p>监测点编号:</p>
@@ -22,7 +22,7 @@
       </div>
       <div class="modal-button">
         <div :class="datalist.wid?'police':'normal'" @click="determine">详情</div>
-        <div class="modal-navigation" @click="navigation">导航</div>
+        <div class="modal-navigation" :class="datalist.wid?'police-navigation':'normal-navigation'" @click="navigation">导航</div>
       </div>
     </div>
     <div class="mask"></div>
@@ -97,7 +97,6 @@ $normal: RGBA(50, 150, 250, 1);
       height: 0.8rem;
       color: white;
       box-sizing: border-box;
-      background:$normal;
       padding-left: 0.2rem;
       line-height: 0.8rem;
     }
@@ -138,7 +137,12 @@ $normal: RGBA(50, 150, 250, 1);
       }
       .modal-navigation {
         color: white;
+      }
+      .normal-navigation {
         background: $normal;
+      }
+      .police-navigation {
+        background: $police;
       }
     }
   }
