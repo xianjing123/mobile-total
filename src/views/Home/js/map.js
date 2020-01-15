@@ -23,18 +23,27 @@ async function map() {
             id: "basemap"
         });
         map = new Map({
-            basemap: basemap
+            basemap: basemap,
         });
         view = new SceneView({
             container: "viewDiv",
             map: map,
+            zoom: 12,
+            maxZoom: 9,
+            center: [119.975, 30.54],
             spatialReference: {
                 wkid: 4326
             },
-            camera: {
-                position: [119.94, 30.54, 20000]
-            }
+            // camera: {
+            // position: [119.975, 30.54, 15000]
+            // }
         });
+        var maxZoom = 10;
+        view.watch('zoom', (value) => {
+            if (value < maxZoom) {
+                view.zoom = maxZoom;
+            }
+        })
         // 移除底部ESRI logo
         view.ui.remove("attribution");
         // 移除地图切换方式控件

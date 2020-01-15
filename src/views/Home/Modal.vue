@@ -1,15 +1,27 @@
 <template>
   <div class="modal-total">
     <div class="modal" ref="modal">
-      <div class="modal-title">{{name}}</div>
+      <div :class="'modal-title '+datalist.wid?'police-title':'normal-title'">{{datalist.name||datalist.pumpStation}}</div>
       <div class="modal-main">
-        <div v-for="(data,index) in datalist" :key="index" class="modal-text">
-          <p>{{data.name}}:</p>
-          <p>{{data.value}}</p>
+        <div class="modal-text">
+          <p>监测点编号:</p>
+          <p>{{datalist.code||datalist.stationKey}}</p>
+        </div>
+        <div class="modal-text">
+          <p>监测点名称:</p>
+          <p>{{datalist.name||datalist.pumpStation}}</p>
+        </div>
+        <div class="modal-text">
+          <p>状态:</p>
+          <p>{{datalist.status}}</p>
+        </div>
+        <div class="modal-text">
+          <p>更新时间:</p>
+          <p>{{datalist.createTime||datalist.date}}</p>
         </div>
       </div>
       <div class="modal-button">
-        <div class="modal-detail" @click="determine">详情</div>
+        <div :class="datalist.wid?'police':'normal'" @click="determine">详情</div>
         <div class="modal-navigation" @click="navigation">导航</div>
       </div>
     </div>
@@ -21,46 +33,45 @@
 export default {
   data() {
     return {
-      datalist: [
-        {
-          name: "监测点编号",
-          value: "0001"
-        },
-        {
-          name: "检测点名称",
-          value: "舞阳泵站"
-        },
-        {
-          name: "状态",
-          value: "正常"
-        },
-        {
-          name: "更新时间",
-          value: "2019.05.06 12.34.45"
-        }
-      ] //模态框内容
+      datalist: null //动态数据
     };
   },
   methods: {
     //地图点点击
     determine() {
-      this.$refs.modal.style.display = "none";
-      this.$router.push(`/home/detail?name=${this.name}`);
+      this.$router.push(`/home/detail?name=${this.datalist.name}`);
     },
     //导航栏
     navigation() {
       this.$emit("navigation", true);
     }
   },
-  props: ["name"]
+  //创建弹出层时赋值给 datalist
+  created() {
+    this.datalist = this.data;
+  },
+  props: ["name", "data"]
 };
 </script>
 
 <style lang="scss" scoped>
 $police: RGBA(242, 86, 67, 1);
 $normal: RGBA(50, 150, 250, 1);
+.normal {
+  color: $normal;
+  border: 1px solid $normal;
+}
+.police {
+  color: $police;
+  border: 1px solid $police;
+}
+.normal-title {
+  background: $normal;
+}
+.police-title {
+  background: $normal;
+}
 .modal-total {
-  display: none;
   .mask {
     position: absolute;
     width: 100vw;
@@ -82,7 +93,6 @@ $normal: RGBA(50, 150, 250, 1);
     .modal-title {
       width: 100%;
       height: 0.8rem;
-      background: $normal;
       color: white;
       box-sizing: border-box;
       padding-left: 0.2rem;

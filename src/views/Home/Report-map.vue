@@ -23,7 +23,7 @@
           <div class="describe-input_img">
             <img src="/imgs/describe-img.png" alt ref="fileImg" />
           </div>
-          <input type="text" class="describe-input_text" />
+          <input type="text" class="describe-input_text" ref="input_text"/>
         </div>
         <label>
           <input type="file" @change="fileChange" ref="file" style="display:none" />
@@ -37,6 +37,7 @@
         <p @click="determine">确定</p>
       </div>
     </div>
+    <div class="mask" ref="mask"></div>
     <mt-actionsheet :actions="actions" v-model="sheetVisible"></mt-actionsheet>
   </div>
 </template>
@@ -44,7 +45,8 @@
 <script>
 import Header from "../../components/Header";
 import map from "./js/map";
-import { point } from "./js/point";
+import esriLoader from "esri-loader";
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -66,7 +68,9 @@ export default {
             console.log("上传图片");
           }
         }
-      ]
+      ],
+      submitSrc:"", //图片路径
+      location:"" //坐标位置
     };
   },
   methods: {
@@ -75,33 +79,99 @@ export default {
       this.listShow = false;
       this.area = "浙江省湖州市德清县科源路辅路";
       this.$refs.chatBox.style.display = "none";
+      this.$refs.mask.style.display = "block";
     },
     //地图点内容隐藏
     reportPut() {
       this.listShow = true;
       this.area = "在地图确定问题位置";
+      this.$refs.mask.style.display = "none";
     },
     //立即上传
     actionSheet() {
       this.sheetVisible = true;
     },
+    //上传图片
     fileChange() {
       var that = this;
       var reader = new FileReader();
       reader.readAsDataURL(this.$refs.file.files[0]);
       reader.onload = function() {
         that.$refs.fileImg.src = reader.result; //base64格式
+        that.submitSrc = that.$refs.file.files[0]
       };
+    },
+    //点击地图点-渲染坐标
+    point(node) {
+      var that = this
+      var esri = map();
+      esri.then(res => {
+        var map = res.map;
+        var view = res.view;
+        var options = { url: "https://js.arcgis.com/4.13/" };
+        esriLoader
+          .loadModules(["esri/layers/GraphicsLayer", "esri/Graphic"], options)
+          .then(([GraphicsLayer, Graphic]) => {
+            var graphicsLayer = new GraphicsLayer();
+            map.add(graphicsLayer);
+            var markerSymbol = {
+              type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+              color: [38, 168, 162],
+              outline: {
+                // autocasts as new SimpleLineSymbol()
+                color: [255, 255, 255],
+                width: 2
+              }
+            };
+            var pointGraphic;
+            view.on("click", e => {
+              if (pointGraphic) {
+                graphicsLayer.remove(pointGraphic);
+              }
+              var point = e.mapPoint;
+              pointGraphic = new Graphic({
+                geometry: point,
+                symbol: markerSymbol
+              });
+              graphicsLayer.add(pointGraphic);
+              view.hitTest(e).then(res => {
+                that.location = e.mapPoint.longitude.toFixed(7)+","+e.mapPoint.latitude.toFixed(7)
+                var x = res.screenPoint.x;
+                var y = res.screenPoint.y;
+                node.style.display = "block";
+                node.style.left = x + "px";
+                node.style.top = y + "px";
+                node.style.transform = "translate(-43%,-30%)";
+              });
+            });
+          });
+      });
     }
   },
   mounted() {
     this.$store.commit("commitShow", false);
     this.name = this.$route.query.name;
     //地图点
-    point(this.$refs.chatBox);
+    this.point(this.$refs.chatBox);
   },
   destroyed() {
     this.$store.commit("commitShow", true);
+  },
+  watch:{
+    submitSrc(res){
+      var that = this
+      axios({
+        url:"http://192.168.2.199:8080/cover/caseManagement/newCase",
+        method:"post",
+        data:{
+          location:this.location,
+          caseDescribe:this.$refs.input_text.value,
+          reportUserInfoId:"asdfghjkl"
+        }
+      }).then(data=>{
+        console.log(data)
+      })
+    }
   },
   components: {
     Header
@@ -111,6 +181,14 @@ export default {
 
 <style lang="scss" scoped>
 @import url("../../assets/css/map.css");
+.mask {
+  width: 100%;
+  height: calc(100vh - 6.3rem);
+  position: absolute;
+  top: 0.8rem;
+  z-index: 98;
+  display: none;
+}
 #viewDiv {
   position: absolute;
   top: 0.8rem;

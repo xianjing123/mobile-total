@@ -45,7 +45,7 @@
         </div>
       </div>
     </mt-popup>
-    <Modal ref="modal" :name="name" @navigation="navigationShow($event)"></Modal>
+    <Modal ref="modal" @navigation="navigationShow($event)" :data="data" v-if="isModalShow" :color="color"></Modal>
     <div class="navigation">
       <mt-actionsheet :actions="actions" v-model="sheetVisible"></mt-actionsheet>
     </div>
@@ -55,7 +55,15 @@
 <script>
 import Header from "../components/Header";
 import Modal from "./Home/Modal";
-import { normalStation } from "./Home/js/point";
+import axios from "axios";
+import esriLoader from "esri-loader";
+import map from './Home/js/map'
+var serverGraphicsLayer;//管线图层
+var pipeServer;//官线服务
+var graphicsLayer;//泵站
+var graphicsLayer1;//雨污混排
+var graphicsLayer2;//积水
+var graphicsLayer3;//井盖
 export default {
   data() {
     return {
@@ -81,9 +89,13 @@ export default {
           name: "高德地图",
           method: function() {
             console.log("高德地图");
+            location.href =
+              "https://uri.amap.com/marker?position=119.977401,30.54251&name=德清";
           }
         }
-      ] //导航栏内容
+      ], //导航栏内容
+      data:null,
+      isModalShow:false
     };
   },
   methods: {
@@ -94,6 +106,13 @@ export default {
     //监测点切换
     mapActiveClick(index) {
       this.mapActiveIndex = index;
+      //this.$refs.modal.$el
+      this.normalStation(
+        "",
+        this.mapActive,
+        this.mapActiveIndex,
+        true
+      );
     },
     //上传
     monitorReport() {
@@ -103,13 +122,284 @@ export default {
     navigationShow(evt) {
       this.sheetVisible = evt;
     },
-    mapActiveShow(show){
-      this.mapActive=show
-      normalStation(this.$refs.modal.$el,this.mapActive)
+    //地图类型切换
+    mapActiveShow(show) {
+      this.mapActive = show;
+      this.normalStation(
+        "",
+        this.mapActive,
+        this.mapActiveIndex,
+        true
+      );
+    },
+    //地图点、道路渲染
+    normalStation(node, mapActive, mapActiveIndex, active = true) {
+      var that =this
+      if (active) {
+        if (mapActive) {
+          //true为官网
+          serverGraphicsLayer.visible = false;
+          pipeServer.visible = true;
+        } else {
+          //false为道路
+          serverGraphicsLayer.visible = true;
+          pipeServer.visible = false;
+        }
+        //控制监测点
+        if (mapActiveIndex === 0) {
+          graphicsLayer.visible = true;
+          graphicsLayer1.visible = false;
+          graphicsLayer2.visible = false;
+          graphicsLayer3.visible = false;
+        } else if (mapActiveIndex === 1) {
+          graphicsLayer.visible = false;
+          graphicsLayer1.visible = true;
+          graphicsLayer2.visible = false;
+          graphicsLayer3.visible = false;
+        } else if (mapActiveIndex === 2) {
+          graphicsLayer.visible = false;
+          graphicsLayer1.visible = false;
+          graphicsLayer2.visible = true;
+          graphicsLayer3.visible = false;
+        } else {
+          graphicsLayer.visible = false;
+          graphicsLayer1.visible = false;
+          graphicsLayer2.visible = false;
+          graphicsLayer3.visible = true;
+        }
+      } else {
+        var esri = map();
+        esri.then(res => {
+          var map = res.map;
+          var view = res.view;
+          var options = { url: "https://js.arcgis.com/4.13/" };
+          esriLoader
+            .loadModules(
+              [
+                "esri/layers/GraphicsLayer",
+                "esri/Graphic",
+                "esri/layers/MapImageLayer",
+                "esri/tasks/QueryTask",
+                "esri/tasks/support/Query"
+              ],
+              options
+            )
+            .then(
+              ([GraphicsLayer, Graphic, MapImageLayer, QueryTask, Query]) => {
+                graphicsLayer = new GraphicsLayer(); //泵站
+                map.add(graphicsLayer);
+
+                graphicsLayer1 = new GraphicsLayer(); //雨污混排
+                map.add(graphicsLayer1);
+
+                graphicsLayer2 = new GraphicsLayer(); //积水
+                map.add(graphicsLayer2);
+
+                graphicsLayer3 = new GraphicsLayer(); //井盖
+                map.add(graphicsLayer3);
+
+                serverGraphicsLayer = new GraphicsLayer(); //道路
+                map.add(serverGraphicsLayer);
+                //官网服务
+                pipeServer = new MapImageLayer({
+                  url:
+                    "http://218.75.49.82:6080/arcgis/rest/services/%E6%99%BA%E6%85%A7%E5%B8%82%E6%94%BF/%E7%AE%A1%E7%BD%91%E6%9C%80%E6%96%B0/MapServer",
+                  title: "pipeServer"
+                });
+                map.add(pipeServer);
+
+                function queryServer(url, name, type, color, layer) {
+                  var urlName = url;
+                  var SerQueryTask = new QueryTask({
+                    url: urlName
+                  });
+                  var SerQuery = new Query();
+                  // query.returnGeometry = true;
+                  SerQuery.outFields = ["*"];
+                  SerQuery.returnGeometry = true;
+                  // query.where = "code='ZGD15'";  // Return all cities with a population greater than 1 million
+                  SerQuery.where = "1=1"; // Return all cities with a population greater than 1 million
+                  // When resolved, returns features and graphics that satisfy the query.
+                  SerQueryTask.execute(SerQuery).then(function(results) {
+                    var symbol = {
+                      id: name,
+                      type: type, // autocasts as new SimpleFillSymbol()
+                      color: color,
+                      style: "solid",
+                      outline: {
+                        // autocasts as new SimpleLineSymbol()
+                        color: color,
+                        width: 1
+                      }
+                    };
+                    let features = results.features;
+                    // features1 = features[0].symbol = symbol
+                    features = features.map(item => {
+                      item.symbol = symbol;
+                      // item.popupTemplate.remove()
+                      return item;
+                    });
+                    layer.addMany(features);
+                  });
+                }
+                var roadUrl1 =
+                  "http://218.75.49.82:6080/arcgis/rest/services/%E6%99%BA%E6%85%A7%E5%B8%82%E6%94%BF/DQROAD1/MapServer/0";
+                queryServer(
+                  roadUrl1,
+                  "road1",
+                  "simple-fill",
+                  [64, 114, 255, 0.7],
+                  serverGraphicsLayer
+                );
+
+                var roadUrl2 =
+                  "http://218.75.49.82:6080/arcgis/rest/services/%E6%99%BA%E6%85%A7%E5%B8%82%E6%94%BF/DQROAD1/MapServer/1";
+                queryServer(
+                  roadUrl2,
+                  "road2",
+                  "simple-fill",
+                  [16, 213, 255, 0.7],
+                  serverGraphicsLayer
+                );
+
+                var roadUrl3 =
+                  "http://218.75.49.82:6080/arcgis/rest/services/%E6%99%BA%E6%85%A7%E5%B8%82%E6%94%BF/DQROAD1/MapServer/2";
+                queryServer(
+                  roadUrl3,
+                  "road3",
+                  "simple-fill",
+                  [30, 233, 181, 0.7],
+                  serverGraphicsLayer
+                );
+
+                if (mapActive) {
+                  //true为官网显示
+                  serverGraphicsLayer.visible = false;
+                  pipeServer.visible = true;
+                } else {
+                  //false为道路显示
+                  serverGraphicsLayer.visible = true;
+                  pipeServer.visible = false;
+                }
+
+                var path =
+                  "http://192.168.2.199:8080/station/TimeMonitoreController/getPumpMessage";
+                var path1 =
+                  "http://192.168.2.199:8080/sewage/timeMonitoring/getByPage";
+                var path2 =
+                  "http://192.168.2.199:8080/floodedRoad/timeMonitoring/getByPage";
+                var path3 =
+                  "http://192.168.2.199:8080/cover/timeMonitoring/getDeviceAndFacility";
+                function http(url, number) {
+                  var install = [], police = [], offline = []
+                  var xhr = new XMLHttpRequest();
+                  xhr.open("get", url, true);
+                  xhr.onreadystatechange = function() {
+                    if (xhr.readyState !== 4) return;
+                    if (xhr.status < 200 || xhr.status >= 300) return;
+                    JSON.parse(xhr.responseText).data.forEach(item => {
+                      if (item.status === "在线" || item.status === "运行" || item.status === "停止") {
+                        if (item.warn || item.wid) {
+                          police.push(item)
+                        } else {
+                          install.push(item)
+                        }
+                      } else if (item.status === "离线") {
+                        offline.push(item)
+                      }
+                    });
+                    layerPointer(install,"",number)
+                    layerPointer(police,1,number)
+                  };
+                  xhr.send();
+                }
+                //ajax请求数据
+                http(path, "")
+                http(path1, 1);
+                http(path2, 2);
+                http(path3, 3);
+
+                var markerSymbol = {
+                  type: "picture-marker", // autocasts as new SimpleMarkerSymbol()
+                  url: "/imgs/normal-station.png",
+                  width: "50px"
+                };
+
+                var markerSymbol1 = {
+                  type: "picture-marker", // autocasts as new SimpleMarkerSymbol()
+                  url: "/imgs/police-station.png",
+                  width: "50px"
+                };
+
+                //渲染点
+                function layerPointer(arr, number, int) {
+                  arr.forEach(item => {
+                    var point = {
+                      type: "point", // autocasts as new Point()
+                      x: item.longitude,
+                      y: item.latitude
+                    };
+                    var pointGraphic = new Graphic({
+                      geometry: point,
+                      symbol: eval("markerSymbol" + number),
+                      attributes: item
+                    });
+                    eval("graphicsLayer" + int).add(pointGraphic);
+                  });
+                }
+
+                view.on("click", e => {
+                  view.hitTest(e).then(res => {
+                    if (res.results.length) {
+                      if (res.results[0].graphic.geometry.type === "point") {
+                        that.data = res.results[0].graphic.attributes
+                        that.isModalShow = true
+                        setTimeout(()=>{
+                          that.$refs.modal.$el.lastChild.onclick = function () {
+                            that.isModalShow = false
+                          }
+                          view.goTo(e.mapPoint);
+                        },0)
+                      }
+                    } else {
+                      that.isModalShow = false;
+                    }
+                  });
+                });
+                if (mapActiveIndex === 0) {
+                  graphicsLayer.visible = true;
+                  graphicsLayer1.visible = false;
+                  graphicsLayer2.visible = false;
+                  graphicsLayer3.visible = false;
+                } else if (mapActiveIndex === 1) {
+                  graphicsLayer.visible = false;
+                  graphicsLayer1.visible = true;
+                  graphicsLayer2.visible = false;
+                  graphicsLayer3.visible = false;
+                } else if (mapActiveIndex === 2) {
+                  graphicsLayer.visible = false;
+                  graphicsLayer1.visible = false;
+                  graphicsLayer2.visible = true;
+                  graphicsLayer3.visible = false;
+                } else {
+                  graphicsLayer.visible = false;
+                  graphicsLayer1.visible = false;
+                  graphicsLayer2.visible = false;
+                  graphicsLayer3.visible = true;
+                }
+              }
+            );
+        });
+      }
     }
   },
   mounted() {
-    normalStation(this.$refs.modal.$el,this.mapActive);
+    this.normalStation(
+      "",
+      this.mapActive,
+      this.mapActiveIndex,
+      false
+    );
   },
   components: {
     Header,
@@ -189,8 +479,8 @@ export default {
       }
     }
     .active {
-      .map-photo_active{
-        border:2px solid rgba(33, 144, 255, 1);
+      .map-photo_active {
+        border: 2px solid rgba(33, 144, 255, 1);
         box-shadow: 0 0 10px 0 rgba(33, 144, 255, 0.3);
       }
       .map-active {
