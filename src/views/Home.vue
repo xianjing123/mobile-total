@@ -241,7 +241,7 @@ export default {
                   });
                 }
                 var roadUrl1 =
-                  "http://218.75.49.82:6080/arcgis/rest/services/%E6%99%BA%E6%85%A7%E5%B8%82%E6%94%BF/DQROAD1/MapServer/0";
+                  that.$store.state.serverPath+"arcgis/rest/services/%E6%99%BA%E6%85%A7%E5%B8%82%E6%94%BF/DQROAD1/MapServer/0";
                 queryServer(
                   roadUrl1,
                   "road1",
@@ -251,7 +251,7 @@ export default {
                 );
 
                 var roadUrl2 =
-                  "http://218.75.49.82:6080/arcgis/rest/services/%E6%99%BA%E6%85%A7%E5%B8%82%E6%94%BF/DQROAD1/MapServer/1";
+                  that.$store.state.serverPath+"arcgis/rest/services/%E6%99%BA%E6%85%A7%E5%B8%82%E6%94%BF/DQROAD1/MapServer/1";
                 queryServer(
                   roadUrl2,
                   "road2",
@@ -261,7 +261,7 @@ export default {
                 );
 
                 var roadUrl3 =
-                  "http://218.75.49.82:6080/arcgis/rest/services/%E6%99%BA%E6%85%A7%E5%B8%82%E6%94%BF/DQROAD1/MapServer/2";
+                  that.$store.state.serverPath+"arcgis/rest/services/%E6%99%BA%E6%85%A7%E5%B8%82%E6%94%BF/DQROAD1/MapServer/2";
                 queryServer(
                   roadUrl3,
                   "road3",
@@ -281,13 +281,13 @@ export default {
                 }
 
                 var path =
-                  "http://192.168.2.199:8080/station/TimeMonitoreController/getPumpMessage";
+                  that.$store.state.urls+"station/TimeMonitoreController/getPumpMessage";
                 var path1 =
-                  "http://192.168.2.199:8080/sewage/timeMonitoring/getByPage";
+                  that.$store.state.urls+"sewage/timeMonitoring/getByPage";
                 var path2 =
-                  "http://192.168.2.199:8080/floodedRoad/timeMonitoring/getByPage";
+                  that.$store.state.urls+"floodedRoad/timeMonitoring/getByPage";
                 var path3 =
-                  "http://192.168.2.199:8080/cover/timeMonitoring/getDeviceAndFacility";
+                  that.$store.state.urls+"cover/timeMonitoring/getDeviceAndFacility";
                 function http(url, number) {
                   var install = [], police = [], offline = []
                   var xhr = new XMLHttpRequest();
