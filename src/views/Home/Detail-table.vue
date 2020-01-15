@@ -9,7 +9,7 @@
                             {{data.name}}
                         </td>
                         <td>
-                            --
+                            {{data.value}}
                         </td>
                     </tr>
                 </tbody>

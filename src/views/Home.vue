@@ -45,7 +45,7 @@
         </div>
       </div>
     </mt-popup>
-    <Modal ref="modal" @navigation="navigationShow($event)" :data="data" v-if="isModalShow" :color="color"></Modal>
+    <Modal ref="modal" @navigation="navigationShow($event)" :data="data" :id="id" v-if="isModalShow"></Modal>
     <div class="navigation">
       <mt-actionsheet :actions="actions" v-model="sheetVisible"></mt-actionsheet>
     </div>
@@ -94,8 +94,9 @@ export default {
           }
         }
       ], //导航栏内容
-      data:null,
-      isModalShow:false
+      data:null, //动态数据
+      isModalShow:false, //是否显示弹出层
+      id:""
     };
   },
   methods: {
@@ -147,21 +148,25 @@ export default {
         }
         //控制监测点
         if (mapActiveIndex === 0) {
+          that.id = "泵站"
           graphicsLayer.visible = true;
           graphicsLayer1.visible = false;
           graphicsLayer2.visible = false;
           graphicsLayer3.visible = false;
         } else if (mapActiveIndex === 1) {
+          that.id = "雨污"
           graphicsLayer.visible = false;
           graphicsLayer1.visible = true;
           graphicsLayer2.visible = false;
           graphicsLayer3.visible = false;
         } else if (mapActiveIndex === 2) {
+          that.id = "积水"
           graphicsLayer.visible = false;
           graphicsLayer1.visible = false;
           graphicsLayer2.visible = true;
           graphicsLayer3.visible = false;
         } else {
+          that.id = "井盖"
           graphicsLayer.visible = false;
           graphicsLayer1.visible = false;
           graphicsLayer2.visible = false;
@@ -333,6 +338,7 @@ export default {
 
                 //渲染点
                 function layerPointer(arr, number, int) {
+                  console.log(arr)
                   arr.forEach(item => {
                     var point = {
                       type: "point", // autocasts as new Point()
@@ -367,21 +373,25 @@ export default {
                   });
                 });
                 if (mapActiveIndex === 0) {
+                  that.id = "泵站"
                   graphicsLayer.visible = true;
                   graphicsLayer1.visible = false;
                   graphicsLayer2.visible = false;
                   graphicsLayer3.visible = false;
                 } else if (mapActiveIndex === 1) {
+                  that.id = "雨污"
                   graphicsLayer.visible = false;
                   graphicsLayer1.visible = true;
                   graphicsLayer2.visible = false;
                   graphicsLayer3.visible = false;
                 } else if (mapActiveIndex === 2) {
+                  that.id = "积水"
                   graphicsLayer.visible = false;
                   graphicsLayer1.visible = false;
                   graphicsLayer2.visible = true;
                   graphicsLayer3.visible = false;
                 } else {
+                  that.id = "井盖"
                   graphicsLayer.visible = false;
                   graphicsLayer1.visible = false;
                   graphicsLayer2.visible = false;

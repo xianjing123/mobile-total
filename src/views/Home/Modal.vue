@@ -1,7 +1,7 @@
 <template>
   <div class="modal-total">
     <div class="modal" ref="modal">
-      <div :class="'modal-title '+datalist.wid?'police-title':'normal-title'">{{datalist.name||datalist.pumpStation}}</div>
+      <div class="modal-title" :class="datalist.wid?'normal-title':'police-title'">{{datalist.name||datalist.pumpStation}}</div>
       <div class="modal-main">
         <div class="modal-text">
           <p>监测点编号:</p>
@@ -39,7 +39,8 @@ export default {
   methods: {
     //地图点点击
     determine() {
-      this.$router.push(`/home/detail?name=${this.datalist.name}`);
+      localStorage.setItem("detail",JSON.stringify(this.datalist))
+      this.$router.push(`/home/detail?name=${this.datalist.name||this.datalist.pumpStation}&id=${this.id}`);
     },
     //导航栏
     navigation() {
@@ -49,8 +50,9 @@ export default {
   //创建弹出层时赋值给 datalist
   created() {
     this.datalist = this.data;
+    console.log(this.datalist)
   },
-  props: ["name", "data"]
+  props: ["data","id"]
 };
 </script>
 
@@ -69,7 +71,7 @@ $normal: RGBA(50, 150, 250, 1);
   background: $normal;
 }
 .police-title {
-  background: $normal;
+  background: $police;
 }
 .modal-total {
   .mask {
@@ -95,6 +97,7 @@ $normal: RGBA(50, 150, 250, 1);
       height: 0.8rem;
       color: white;
       box-sizing: border-box;
+      background:$normal;
       padding-left: 0.2rem;
       line-height: 0.8rem;
     }

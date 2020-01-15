@@ -160,16 +160,31 @@ export default {
   watch:{
     submitSrc(res){
       var that = this
+      var formData = new FormData()
+      formData.append("location",this.location)
+      formData.append("caseDescribe",this.$refs.input_text.value)
+      formData.append("reportUserInfoId",1)
       axios({
         url:"http://192.168.2.199:8080/cover/caseManagement/newCase",
         method:"post",
-        data:{
-          location:this.location,
-          caseDescribe:this.$refs.input_text.value,
-          reportUserInfoId:"asdfghjkl"
-        }
+        data:formData
       }).then(data=>{
-        console.log(data)
+        if(data.data.code==200){
+          console.log("data",data)
+          var formdata = new FormData()
+          formdata.append("cid",data.data.data)
+          formdata.append("file",res)
+          axios({
+            url:"http://192.168.2.199:8080/cover/caseManagement/uploadToFile",
+            method:"post",
+            data:formdata
+          }).then(fileSuccess=>{
+            console.log(fileSuccess.data)
+            if(fileSuccess.data.code==200){
+              // location.reload()
+            }
+          })
+        }
       })
     }
   },
