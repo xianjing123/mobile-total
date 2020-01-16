@@ -295,6 +295,9 @@ export default {
                   xhr.onreadystatechange = function() {
                     if (xhr.readyState !== 4) return;
                     if (xhr.status < 200 || xhr.status >= 300) return;
+                    if(!JSON.parse(xhr.responseText).data){
+                      return;
+                    }
                     JSON.parse(xhr.responseText).data.forEach(item => {
                       if (item.status === "在线" || item.status === "运行" || item.status === "停止") {
                         if (item.warn || item.wid) {

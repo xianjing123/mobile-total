@@ -34,7 +34,7 @@
           <div class="password" ref="passwordBlock">
             <label>
               <img src="/imgs/password.png" alt />
-              <input type="text" placeholder="密码" ref="password" v-model="password" />
+              <input type="password" placeholder="密码" ref="password" v-model="password" />
             </label>
           </div>
           <div class="remember" @click="rememberClick">
