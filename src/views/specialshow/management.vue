@@ -673,7 +673,15 @@ export default {
         _this.mounth = evt
         // alert(this.swipers)
         if(_this.swipers == 0){//这是道路
-          _this.axios.get(''+_this.url+'/way/road/mobileTerminalRoadDisplay?month='+_this.mounth+'').then(res => {     
+          _this.axios.get(''+_this.url+'/way/road/mobileTerminalRoadDisplay?month='+_this.mounth+'',
+          {
+              params: {
+                cid: this.id
+              },
+              headers: {
+                Authorization: this.token
+              }
+            }).then(res => {     
             const data = res.data.data         
             _this.datalist1 = data.解决率图表
             _this.datalist2 = data.报警类型表
@@ -684,7 +692,15 @@ export default {
             _this.option2.series[0].data=_this.datalist2;
           })
         }else if(_this.swipers == 1){//这是泵站
-          _this.axios.get(''+_this.url+'/station/pumpStationCaseManagement/getPumpData?month='+_this.mounth+'').then(res => {     
+          _this.axios.get(''+_this.url+'/station/pumpStationCaseManagement/getPumpData?month='+_this.mounth+'',
+          {
+              params: {
+                cid: this.id
+              },
+              headers: {
+                Authorization: this.token
+              }
+            }).then(res => {     
             const data = res.data.data         
             _this.datalist3 = data.解决率图表
             _this.datalist4 = data.报警类型表
@@ -692,7 +708,15 @@ export default {
             _this.option4.series[0].data=_this.datalist4;
           })
         }else if(_this.swipers == 2){//这是桥梁
-          _this.axios.get(''+_this.url+'/way/bridge/mobileTerminalBridgeDisplay?month='+_this.mounth+'').then(res => {     
+          _this.axios.get(''+_this.url+'/way/bridge/mobileTerminalBridgeDisplay?month='+_this.mounth+'',
+          {
+              params: {
+                cid: this.id
+              },
+              headers: {
+                Authorization: this.token
+              }
+            }).then(res => {     
             const data = res.data.data         
             _this.datalist5 = data.解决率图表
             _this.datalist6 = data.报警类型表
@@ -703,7 +727,15 @@ export default {
             _this.option6.series[0].data=_this.datalist6;
           })
         }else if(_this.swipers == 3){//这是积水
-          _this.axios.get(''+_this.url+'/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'').then(res => {     
+          _this.axios.get(''+_this.url+'/floodedRoad/deviceManagement/selectWarnDeviceCharts?month='+_this.mounth+'',
+          {
+              params: {
+                cid: this.id
+              },
+              headers: {
+                Authorization: this.token
+              }
+            }).then(res => {     
             const data = res.data.data
             let deviceCharts = data.deviceCharts
             _this.datalist8 = data.deviceCharts
@@ -712,7 +744,15 @@ export default {
             _this.option8.series[0].data=_this.datalist8;
           })
         }else if(_this.swipers == 4){//这是污水直排
-          _this.axios.get(''+_this.url+'/sewage/monitorDevice/selectRectifySewage?month='+_this.mounth+'').then(res => {     
+          _this.axios.get(''+_this.url+'/sewage/monitorDevice/selectRectifySewage?month='+_this.mounth+'',
+          {
+              params: {
+                cid: this.id
+              },
+              headers: {
+                Authorization: this.token
+              }
+            }).then(res => {     
             const data = res.data.data
             _this.datalist9 = data.structural
             _this.datalist11 = data.functional
@@ -777,7 +817,16 @@ export default {
     });
     this.$nextTick(function(){
       var _this = this; `这一步很重要`
-      _this.axios.get(''+_this.url+'/way/road/mobileTerminalRoadDisplay?month='+_this.mounth+'').then(res => {     
+      _this.axios.get(''+_this.url+'/way/road/mobileTerminalRoadDisplay?month='+_this.mounth+'',
+      {
+              params: {
+                cid: this.id
+              },
+              headers: {
+                Authorization: this.token
+              }
+            }
+      ).then(res => {     
         const data = res.data.data         
         _this.datalist1 = data.解决率图表
         _this.datalist2 = data.报警类型表
@@ -827,6 +876,10 @@ export default {
       this.data12.ChartLineGraph.clear();
       this.data12.ChartLineGraph.setOption(this.data12.data);
     },
+  },
+  created() {
+    this.token = getCookie("token");
+    this.type = localStorage.getItem("type");
   },
   components: {linegraph,picker},  
    

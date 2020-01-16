@@ -137,7 +137,15 @@ export default {
     });
     this.$nextTick(function(){
       var _this = this; `这一步很重要`
-      _this.axios.get(''+_this.url+'/way/bridge/mobileTerminalDisplay2?month='+_this.mounth+'').then(res => {     
+      _this.axios.get(''+_this.url+'/way/bridge/mobileTerminalDisplay2?month='+_this.mounth+'',
+      {
+              params: {
+                cid: this.id
+              },
+              headers: {
+                Authorization: this.token
+              }
+            }).then(res => {     
             const data = res.data.data         
             _this.datalist3 = data["304桥洞"]
             _this.datalist4 = data["春晖桥洞"]
@@ -149,7 +157,15 @@ export default {
     });
     this.$nextTick(function(){
       var _this = this; `这一步很重要`
-      _this.axios.get(''+_this.url+'/way/bridge/mobileTerminalDisplay1?month='+_this.mounth+'').then(res => {     
+      _this.axios.get(''+_this.url+'/way/bridge/mobileTerminalDisplay1?month='+_this.mounth+'',
+      {
+              params: {
+                cid: this.id
+              },
+              headers: {
+                Authorization: this.token
+              }
+            }).then(res => {     
             const data = res.data.data         
             _this.datalist1 = data["振兴桥洞"]
             _this.datalist2 = data["舞阳桥洞"]
@@ -167,7 +183,15 @@ export default {
         _this.mounth = evt
         // alert(this.swipers)
         if(_this.swipers == 0){//这是舞阳桥洞
-          _this.axios.get(''+_this.url+'/way/bridge/mobileTerminalDisplay1?month='+_this.mounth+'').then(res => {     
+          _this.axios.get(''+_this.url+'/way/bridge/mobileTerminalDisplay1?month='+_this.mounth+'',
+          {
+              params: {
+                cid: this.id
+              },
+              headers: {
+                Authorization: this.token
+              }
+            }).then(res => {     
             const data = res.data.data         
             _this.datalist1 = data["振兴桥洞"]
             _this.datalist2 = data["舞阳桥洞"]
@@ -195,6 +219,10 @@ export default {
       this.data2.ChartLineGraph.setOption(this.data2.data);
     },
   }, 
+  created() {
+    this.token = getCookie("token");
+    this.type = localStorage.getItem("type");
+  },
   components: {linegraph,picker},  
    
 }
