@@ -95,6 +95,7 @@ export default {
   methods: {
     //点击登录
     LoginTo() {
+      var that = this
       if (this.username === "") {
         this.$refs.usernameBlock.style.border = "1px solid orange";
       }
@@ -107,15 +108,6 @@ export default {
       ) {
         return;
       }
-      if(this.isRemember){
-        setCookie("username",Encrypt(this.username),'/',30)
-        setCookie("password",Encrypt(this.password),'/',30)
-      } else {
-        setCookie("username",Encrypt(this.username),'/',30)
-        if(getCookie("password")){
-          removeCookie("password")
-        }
-      }
       axios
         .post(this.$store.state.urls + "security/subject/login", {
           username: this.username,
@@ -124,6 +116,15 @@ export default {
         .then(function(response) {
           if (response.data.code == "200") {
             setCookie("token", response.data.data.jwt, "/", 1);
+            if(that.isRemember){
+              setCookie("username",Encrypt(that.username),'/',30)
+              setCookie("password",Encrypt(that.password),'/',30)
+            } else {
+              setCookie("username",Encrypt(that.username),'/',30)
+              if(getCookie("password")){
+                removeCookie("password")
+              }
+            }
             that.$router.push("/home");
           } else {
           }
