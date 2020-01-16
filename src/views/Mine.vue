@@ -15,7 +15,7 @@
     <mt-cell
       style="border-bottom:1px solid rgba(197, 199, 200, 1)"
       title="所属部门"
-      :value="mine.departmentNames.toString()"
+      :value="mine.departmentNames?mine.departmentNames.toString():''"
     ></mt-cell>
     <mt-cell to="/updetepassword/" title="密码" is-link value="*******"></mt-cell>
     <div class="me_btn" @click="logout">退出登录</div>
@@ -45,7 +45,7 @@ export default {
   },
   mounted() {
     axios
-      .get(this.$store.state.urls + "/security/subject/selectSubjectById", {
+      .get(this.$store.state.urls + "security/subject/selectSubjectById", {
         headers: {
           Authorization: this.token
         }
