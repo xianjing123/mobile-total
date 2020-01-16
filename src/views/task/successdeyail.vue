@@ -17,8 +17,8 @@
         </div>
         <div class="top_des_02">
           <span class="des_name">上报人</span>
-          <input type="text" class="inp_name" value="张三" />
-          <input type="text" class="inp_date" value="2019/10/22 12:41:20" />
+          <input type="text" class="inp_name" value="张三" v-model="name" />
+          <input type="text" class="inp_date" value="2019/10/22 12:41:20" v-model="date" />
         </div>
         <div class="top_des_03">
           <span class="des_name">任务来源</span>
@@ -32,25 +32,25 @@
         </div>
         <div class="top_des_05">
           <span class="des_name">案件描述</span>
-          <textarea width="100%" class="inp_des"></textarea>
+          <textarea width="100%" class="inp_des" v-model="describe"></textarea>
           <!-- <input type="textarea" class="inp_des" /> -->
         </div>
         <div class="top_des_05" style="margin-top:.15rem">
           <span class="des_name">处理意见</span>
-          <textarea width="100%" class="inp_des"></textarea>
+          <textarea width="100%" class="inp_des" v-model="Opinion"></textarea>
           <!-- <input type="textarea" class="inp_des" /> -->
         </div>
         <div class="top_des_05" style="margin-top:.15rem">
           <span class="des_name">附件</span>
           <div class="des_img">
-            <img src alt />
+            <img alt :src="imglink" />
           </div>
           <!-- <input type="textarea" class="inp_des" /> -->
         </div>
-        <div class="btn">
+        <!-- <div class="btn">
           <button class="btn1">接单</button>
           <button class="btn2">取消</button>
-        </div>
+        </div>-->
       </div>
     </div>
     <mt-popup
@@ -73,6 +73,8 @@
 <script>
 import Header from "../../components/Header";
 import esriLoader from "esri-loader";
+import { getCookie } from "../../components/cookie";
+import axios from "axios";
 export default {
   data() {
     return {
@@ -83,7 +85,14 @@ export default {
         {
           values: ["城市选择", "苏州", "常州", "杭州", "湖州", "上海", "南京"]
         }
-      ]
+      ],
+      name: "",
+      date: "",
+      yuan: "",
+      describe: "",
+      Opinion: "",
+      imglink: "",
+      token: ""
     };
   },
   components: {
@@ -91,6 +100,7 @@ export default {
   },
   mounted() {
     var that = this;
+    this.id = this.$route.params.id;
     this.$refs.task_news.ontouchstart = function(evt) {
       var downTop = evt.changedTouches[0].clientY;
       window.ontouchmove = function(evt) {
@@ -152,6 +162,25 @@ export default {
       .catch(err => {
         console.error(err);
       });
+    axios
+      .get(
+        this.$store.state.urls + "way/inspectionRecord/selectOneInspectionById",
+        {
+          params: {
+            Authorization: this.token,
+            id: this.id
+          }
+        }
+      )
+      .then(res => {
+        console.log(res);
+        this.name = res.data.data.username;
+        this.date = res.data.data.cycleExecuteTime;
+        this.describe = res.data.data.context;
+        this.Opinion = res.data.data.result;
+        this.imglink = this.$store.state.urls + res.data.data.link;
+        // this.newtasklist = res.data.data.records;
+      });
   },
   methods: {
     onValuesChange(picker, values) {
@@ -166,6 +195,10 @@ export default {
   },
   destroyed() {
     this.$store.commit("commitShow", true);
+  },
+  created() {
+    this.token = getCookie("token");
+    this.type = localStorage.getItem("type");
   }
 };
 </script>

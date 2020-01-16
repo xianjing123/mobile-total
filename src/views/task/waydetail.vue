@@ -68,9 +68,11 @@
         </div>
         <div class="top_des_04">
           <span class="des_name">附件</span>
-          <div class="des_img">
-            <input type="file" value id="file" @change="onUpload" />
-          </div>
+          <label class="des_img">
+            <input type="file" @change="fileChange" ref="file" style="display:none" />
+            <img src="/imgs/logo.jpg" alt ref="fileImg" />
+            <input type="hidden" v-model="imgValue" />
+          </label>
         </div>
         <!-- <div class="btn">
           <button class="btn1">接单</button>
@@ -142,7 +144,8 @@ export default {
       Opinion1: "",
       imglink: "",
       token: "",
-      id: ""
+      id: "",
+      imgValue: ""
     };
   },
   components: {
@@ -266,8 +269,42 @@ export default {
     },
     showpup() {
       this.popupVisible = true;
+    },
+    fileChange() {
+      var that = this;
+      var reader = new FileReader();
+      reader.readAsDataURL(this.$refs.file.files[0]);
+      reader.onload = function() {
+        that.$refs.fileImg.src = reader.result; //base64格式
+        that.imgValue = that.$refs.file.files[0];
+        console.log(that.imgValue);
+      };
+    },
+    btn_bottom() {
+      let data = new FormData();
+      data.append("cid", this.id);
+      data.append("context", this.Opinion);
+      data.append("receipt_user_info_id", this.people);
+      data.append("matterReason", this.reason);
+      data.append("file", this.imgValue);
+      axios
+        .post(
+          this.$store.state.urls + "way/InspectionCaseMangement/receiptCase",
+          data,
+          {
+            headers: {
+              Authorization: this.token
+            }
+          }
+        )
+        .then(res => {
+          console.log(res);
+          if (res.data.code == "200") {
+            MessageBox("提示", "接单成功");
+          }
+          // console.log("res=>", res);
+        });
     }
-
     // showdate() {
     //   this.pickerValue = true;
     // }
@@ -278,16 +315,6 @@ export default {
   created() {
     this.token = getCookie("token");
     this.type = localStorage.getItem("type");
-  },
-  onUpload: function(e) {
-    var file2 = e.target.files[0];
-    console.log(file2);
-    // api.upload(file2).done(function(res) {
-    //   //封装的请求接口api.js文件
-    //   if (res.result.code == 0) {
-    //     console.log(res);
-    //   }
-    // });
   }
 };
 </script>

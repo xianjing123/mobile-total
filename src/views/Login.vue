@@ -116,8 +116,6 @@ export default {
           removeCookie("password")
         }
       }
-      setCookie("token", "测试", "/", 1);
-      this.$router.push("/home");
       axios
         .post(this.$store.state.urls + "security/subject/login", {
           username: this.username,
