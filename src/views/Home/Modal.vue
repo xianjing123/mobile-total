@@ -50,7 +50,6 @@ export default {
   //创建弹出层时赋值给 datalist
   created() {
     this.datalist = this.data;
-    console.log(this.datalist)
   },
   props: ["data","id"]
 };

@@ -33,7 +33,7 @@
     </div>
     <div ref="chatBox" class="chat">
       <div class="chat-box">
-        <span>浙江省湖州市德清县科源路辅路</span>
+        <span>请在地图上确定位置</span>
         <p @click="determine">确定</p>
       </div>
     </div>
@@ -77,7 +77,7 @@ export default {
     //地图点点击
     determine() {
       this.listShow = false;
-      this.area = "浙江省湖州市德清县科源路辅路";
+      this.area = "已确定位置";
       this.$refs.chatBox.style.display = "none";
       this.$refs.mask.style.display = "block";
     },
@@ -165,7 +165,7 @@ export default {
       formData.append("caseDescribe",this.$refs.input_text.value)
       formData.append("reportUserInfoId",1)
       axios({
-        url:"http://192.168.2.199:8080/cover/caseManagement/newCase",
+        url:this.$store.state.urls+"cover/caseManagement/newCase",
         method:"post",
         data:formData
       }).then(data=>{
@@ -175,13 +175,13 @@ export default {
           formdata.append("cid",data.data.data)
           formdata.append("file",res)
           axios({
-            url:"http://192.168.2.199:8080/cover/caseManagement/uploadToFile",
+            url:this.$store.state.urls+"cover/caseManagement/uploadToFile",
             method:"post",
             data:formdata
           }).then(fileSuccess=>{
             console.log(fileSuccess.data)
             if(fileSuccess.data.code==200){
-              // location.reload()
+              location.reload()
             }
           })
         }
