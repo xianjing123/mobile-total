@@ -12,7 +12,11 @@
       <div class="top_des">
         <div class="top_des_01">
           <span class="des_tit">详情描述</span>
-          <img src="/imgs/logo.jpg" alt />
+          <label>
+            <input type="file" @change="fileChange" ref="file" style="display:none" />
+            <img src="/imgs/logo.jpg" alt ref="fileImg" />
+            <input type="hidden" v-model="imgValue" />
+          </label>
           <input class="inp_tit" type="text" value="管道破裂" placeholder="请输入原因.." v-model="what" />
         </div>
         <div class="top_des_02">
@@ -20,38 +24,71 @@
           <input type="text" class="inp_name" value="张三" placeholder="请输入名称" v-model="people" />
           <span class="inp_date" @click="openPicker()">{{tadevalue}}</span>
         </div>
-        <!-- <div class="top_des_03">
-          <span class="des_name">任务来源</span>
-          <input type="text" class="inp_origin" value="一路一档信息管理系统" />
+        <div class="top_des_03">
+          <span class="des_name">案件类型</span>
+          <div class="show_pup" @click="showpup1()">
+            <input type="text" class="inp_origin" v-model="type" />
+          </div>
+          <!-- <input type="text" class="inp_origin" value="一路一档信息管理系统" /> -->
         </div>
         <div class="top_des_04">
           <span class="des_name">案件等级</span>
           <div class="show_pup" @click="showpup()">
-            <input type="text" class="inp_pup" v-model="message" />
+            <input type="text" class="inp_pup" v-model="levValue" />
           </div>
         </div>
         <div class="top_des_05">
           <span class="des_name">案件描述</span>
-        <textarea width="100%" class="inp_des"></textarea>-->
-        <!-- <input type="textarea" class="inp_des" /> -->
-        <!-- </div>
+          <textarea width="100%" class="inp_des" v-model="desvalue"></textarea>
+        </div>
         <div class="top_des_05" style="margin-top:.15rem">
           <span class="des_name">处理意见</span>
-        <textarea width="100%" class="inp_des"></textarea>-->
-        <!-- <input type="textarea" class="inp_des" /> -->
-        <!-- </div>
+          <textarea width="100%" class="inp_des" v-model="advicevalue"></textarea>
+        </div>
         <div class="top_des_05" style="margin-top:.15rem">
+          <span class="des_name">备注</span>
+          <textarea width="100%" class="inp_des" v-model="remvalue"></textarea>
+        </div>
+        <!-- <div class="top_des_05" style="margin-top:.15rem">
           <span class="des_name">附件</span>
           <div class="des_img">
             <img src alt />
+          </div>
+          <input type="textarea" class="inp_des" />
         </div>-->
-        <!-- <input type="textarea" class="inp_des" /> -->
-        <!-- </div> -->
-        <div class="btn">
-          <button class="btn1" @click="btn_top">立即上报</button>
-          <!-- <button class="btn2">取消</button> -->
-        </div>
       </div>
+      <div class="btn">
+        <button class="btn1" @click="btn_top">立即上报</button>
+        <!-- <button class="btn2">取消</button> -->
+      </div>
+      <mt-popup
+        v-model="popupVisible"
+        popup-transition="popup-fade"
+        closeOnClickModal="true"
+        position="bottom"
+      >
+        <mt-picker :slots="slots" @change="onValuesChange" style="width: 7.5rem;" showToolbar>
+          <div class="picker-toolbar-title">
+            <span class="usi-btn-cancel" @click="popupVisible = !popupVisible">取消</span>
+            <div class="le">请选择等级</div>
+            <span class="usi-btn-sure" @click="popupVisible = !popupVisible">确定</span>
+          </div>
+        </mt-picker>
+      </mt-popup>
+      <mt-popup
+        v-model="popupVisible1"
+        popup-transition="popup-fade"
+        closeOnClickModal="true"
+        position="bottom"
+      >
+        <mt-picker :slots="slots1" @change="onValuesChange1" style="width: 7.5rem;" showToolbar>
+          <div class="picker-toolbar-title">
+            <span class="usi-btn-cancel" @click="popupVisible1 = !popupVisible1">取消</span>
+            <div class="le">请选择等级</div>
+            <span class="usi-btn-sure" @click="popupVisible1 = !popupVisible1">确定</span>
+          </div>
+        </mt-picker>
+      </mt-popup>
       <div @touchmove.prevent>
         <mt-datetime-picker
           lockScroll="true"
@@ -91,19 +128,31 @@ export default {
   data() {
     return {
       popupVisible: false,
-      message: "请选择代理区域",
+      levValue: "案件等级",
       showToolbar: true,
       slots: [
         {
-          values: ["城市选择", "苏州", "常州", "杭州", "湖州", "上海", "南京"]
+          values: ["案件等级", "一级", "二级", "三级"]
+        }
+      ],
+      slots1: [
+        {
+          values: ["案件类型", "道路", "桥梁"]
         }
       ],
       what: "",
       people: "",
-      date: "",
+
       dateVal: "",
       tadevalue: "2020-1-7",
-      token: ""
+      token: "",
+      imgValue: "",
+      popupVisible1: false,
+      type: "案件类型",
+      desvalue: "请输入描述",
+      advicevalue: "请输入意见",
+      remvalue: "请输入备注",
+      targetId: ""
     };
   },
   components: {
@@ -157,16 +206,45 @@ export default {
       .catch(err => {
         console.error(err);
       });
+    axios
+      .get(
+        this.$store.state.urls + "way/inspectionRecord/selectOneInspectionById",
+        {
+          params: {
+            Authorization: this.token,
+            id: this.id
+          }
+        }
+      )
+      .then(res => {
+        console.log(res);
+        this.targetId = res.data.data.targetId;
+        // this.name = res.data.data.username;
+        // this.tadevalue = res.data.data.cycleExecuteTime;
+        // this.describe = res.data.data.context;
+        // this.Opinion = res.data.data.result;
+        // this.imglink = this.$store.state.urls + res.data.data.link;
+        // // this.newtasklist = res.data.data.records;
+      });
   },
   methods: {
     onValuesChange(picker, values) {
-      this.message = values;
+      this.levValue = values;
+      if (values[0] > values[1]) {
+        picker.setSlotValue(1, values[0]);
+      }
+    },
+    onValuesChange1(picker, values) {
+      this.type = values;
       if (values[0] > values[1]) {
         picker.setSlotValue(1, values[0]);
       }
     },
     showpup() {
       this.popupVisible = true;
+    },
+    showpup1() {
+      this.popupVisible1 = true;
     },
     openPicker() {
       this.$refs.datePicker.open();
@@ -178,7 +256,10 @@ export default {
       m = m < 10 ? "0" + m : m;
       let d = date.getDate();
       d = d < 10 ? "0" + d : d;
-      return y + "-" + m + "-" + d;
+      let h = "00";
+      let f = "00";
+      let s = "00";
+      return y + "-" + m + "-" + d + " " + h + ":" + f + ":" + s;
     },
     handleConfirm() {
       // 输出格式化后的时间
@@ -188,11 +269,18 @@ export default {
     },
     btn_top() {
       console.log("1");
+      console.log(this.imgValue);
       let data = new FormData();
-      data.append("id", this.id);
+      data.append("location", this.targetId);
       data.append("reason", this.what);
       data.append("reportUserInfoId", this.people);
-      data.append("createTime", this.date);
+      data.append("createTime", this.tadevalue);
+      data.append("file", this.imgValue);
+      data.append("grade", this.levValue);
+      data.append("caseDescribe", this.desvalue);
+      data.append("advice", this.advicevalue);
+      data.append("remark", this.remvalue);
+      data.append("caseType", this.type);
       axios
         .post(
           this.$store.state.urls + "way/inspectionRecord/insertInspectionCase",
@@ -204,11 +292,22 @@ export default {
           }
         )
         .then(res => {
+          console.log(res);
           if (res.data.code == "200") {
             MessageBox("提示", "接单成功");
           }
           // console.log("res=>", res);
         });
+    },
+    fileChange() {
+      var that = this;
+      var reader = new FileReader();
+      reader.readAsDataURL(this.$refs.file.files[0]);
+      reader.onload = function() {
+        that.$refs.fileImg.src = reader.result; //base64格式
+        that.imgValue = that.$refs.file.files[0];
+        console.log(that.imgValue);
+      };
     }
   },
   destroyed() {
@@ -232,11 +331,12 @@ export default {
   }
   .task_news {
     width: 100%;
-    height: 12.6rem;
+    height: 5.3rem;
     position: fixed;
-    bottom: -6.5rem;
+    bottom: 1rem;
     left: 0;
     background-color: #fff;
+    overflow-y: auto;
     .task_top {
       width: 100%;
       height: 1.76rem;
@@ -424,31 +524,9 @@ export default {
           color: rgba(112, 112, 112, 1);
         }
       }
-      .btn {
-        width: 100%;
-        height: 1rem;
-        margin-top: 0.2rem;
-        .btn1 {
-          width: 80%;
-          height: 0.8rem;
-          background-color: rgba(50, 150, 250, 1);
-          color: #fff;
-          border: none;
-          border-radius: 0.06rem;
-          margin-left: 10%;
-        }
-        .btn2 {
-          width: 1.28rem;
-          height: 0.6rem;
-          background-color: #fff;
-          color: rgba(50, 150, 250, 1);
-          border: 1px solid rgba(50, 150, 250, 1);
-          border-radius: 0.06rem;
-          margin-left: 10%;
-        }
-      }
     }
   }
+
      .picker-toolbar-title {
     display: flex;
     flex-direction: row;
@@ -473,6 +551,34 @@ export default {
     top: 0.05rem;
     right: 0.2rem;
     color: #ff6600;
+  }
+  .btn {
+    width: 100%;
+    height: 1rem;
+    // margin-top: 0.2rem;
+    z-index: 999;
+    position: fixed;
+    bottom: 0%;
+    left: 0;
+    background-color: #fff;
+    .btn1 {
+      width: 80%;
+      height: 0.8rem;
+      background-color: rgba(50, 150, 250, 1);
+      color: #fff;
+      border: none;
+      border-radius: 0.06rem;
+      margin-left: 10%;
+    }
+    .btn2 {
+      width: 1.28rem;
+      height: 0.6rem;
+      background-color: #fff;
+      color: rgba(50, 150, 250, 1);
+      border: 1px solid rgba(50, 150, 250, 1);
+      border-radius: 0.06rem;
+      margin-left: 10%;
+    }
   }
 }
 </style>

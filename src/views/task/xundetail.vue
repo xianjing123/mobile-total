@@ -87,6 +87,8 @@
 <script>
 import Header from "../../components/Header";
 import esriLoader from "esri-loader";
+import axios from "axios";
+import { getCookie } from "../../components/cookie";
 export default {
   data() {
     return {
@@ -101,7 +103,8 @@ export default {
         {
           values: ["城市选择", "苏州", "常州", "杭州", "湖州", "上海", "南京"]
         }
-      ]
+      ],
+      token: ""
     };
   },
   components: {
@@ -110,6 +113,7 @@ export default {
   mounted() {
     //arcgis地图服务
     var that = this;
+    this.id = this.$route.params.id;
     this.$refs.task_news.ontouchstart = function(evt) {
       var downTop = evt.changedTouches[0].clientY;
       window.ontouchmove = function(evt) {
@@ -202,14 +206,40 @@ export default {
     },
     showpup() {
       this.popupVisible = true;
-    }
+    },
 
     // showdate() {
     //   this.pickerValue = true;
     // }
+    btn_bottom() {
+      let data = new FormData();
+      data.append("id", this.id);
+      axios
+        .post(
+          this.$store.state.urls +
+            "way/inspectionRecord/commitInspectionRecordManage",
+          data,
+          {
+            headers: {
+              Authorization: this.token
+            }
+          }
+        )
+        .then(res => {
+          console.log(res);
+          if (res.data.code == "200") {
+            MessageBox("提示", "接单成功");
+          }
+          // console.log("res=>", res);
+        });
+    }
   },
   destroyed() {
     this.$store.commit("commitShow", true);
+  },
+  created() {
+    this.token = getCookie("token");
+    this.type = localStorage.getItem("type");
   }
 };
 </script>

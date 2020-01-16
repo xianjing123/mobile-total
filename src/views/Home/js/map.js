@@ -15,7 +15,7 @@ async function map() {
             baseLayers: [
                 new MapImageLayer({
                     url:
-                        "http://192.168.2.89:6080/arcgis/rest/services/%E6%99%BA%E6%85%A7%E5%B8%82%E6%94%BF/%E5%BA%95%E5%9B%BE/MapServer",
+                        "http://218.75.49.82:6080/arcgis/rest/services/%E6%99%BA%E6%85%A7%E5%B8%82%E6%94%BF/%E5%BA%95%E5%9B%BE/MapServer",
                     title: "Basemap"
                 })
             ],

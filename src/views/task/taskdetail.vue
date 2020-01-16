@@ -7,7 +7,7 @@
         <img src="/imgs/logo.jpg" alt />
         <span class="top_tit">管道问题</span>
         <span class="top_adress">浙江省湖州市德清县科园路</span>
-        <span class="nav" @click="sliderTop()">导航</span>
+        <a href="https://uri.amap.com/marker?position=119.977401,30.54251&name=德清" class="nav">导航</a>
       </div>
       <div class="top_des">
         <div class="top_des_01">
@@ -344,13 +344,29 @@ export default {
     }
     // sliderTop() {
     //   console.log(this.slider);
-    //   if (this.slider) {
-    //     this.$refs.task_news.style.transform = "translateY(0)";
-    //     this.slider = false;
-    //   } else {
-    //     this.$refs.task_news.style.transform = "translateY(8rem)";
-    //     this.slider = true;
+    //   if (browser.versions.ios) {
+    //     window.location.href =
+    //       "https://www.google.com/maps/dir/?api=1&origin=" +
+    //       startAddress +
+    //       "&destination=" +
+    //       endAddress +
+    //       "&travelmode=driving";
+    //   } else if (browser.versions.android) {
+    //     window.location.href =
+    //       "https://www.google.com/maps/dir/?api=1&origin=" +
+    //       startAddress +
+    //       "&destination=" +
+    //       endAddress +
+    //       "&travelmode=driving";
     //   }
+
+    // if (this.slider) {
+    //   this.$refs.task_news.style.transform = "translateY(0)";
+    //   this.slider = false;
+    // } else {
+    //   this.$refs.task_news.style.transform = "translateY(8rem)";
+    //   this.slider = true;
+    // }
     // }
   },
   destroyed() {

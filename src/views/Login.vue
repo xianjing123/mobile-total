@@ -81,6 +81,7 @@ export default {
     //点击登录
 
     LoginTo() {
+      var that = this;
       if (this.$refs.username.value === "") {
         this.$refs.usernameBlock.style.border = "1px solid orange";
       }

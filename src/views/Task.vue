@@ -17,7 +17,7 @@
           <img :src="item.img" alt />
           <span class="title">{{item.type}}</span>
           <span class="date_tit">派单时间</span>
-          <span class="date">{{item.cycleExecuteTime}}</span>
+          <span class="date">{{item.createTime}}</span>
         </div>
       </mt-tab-container-item>
       <mt-tab-container-item id="2">
