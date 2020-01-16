@@ -75,6 +75,7 @@
 </template>
 <script>
 import picker from "./mouth";
+import {getCookie} from '../../components/cookie'
 import Swiper from "swiper";
 import linegraph from "./echartscom.vue";
 import "swiper/css/swiper.css";

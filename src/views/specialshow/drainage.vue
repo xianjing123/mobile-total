@@ -61,6 +61,7 @@
 <script>
 import picker from './mouth'
 import Swiper from 'swiper' 
+import {getCookie} from '../../components/cookie'
 import linegraph from './echartscom.vue'
 import 'swiper/css/swiper.css';
 export default {
