@@ -7,7 +7,7 @@
         <img src="/imgs/logo.jpg" alt />
         <span class="top_tit">管道问题</span>
         <span class="top_adress">浙江省湖州市德清县科园路</span>
-        <span class="nav">导航</span>
+        <a href="https://uri.amap.com/marker?position=119.977401,30.54251&name=德清" class="nav">导航</a>
       </div>
       <div class="top_des">
         <div class="top_des_01">
@@ -22,7 +22,7 @@
         </div>
         <div class="top_des_03">
           <span class="des_name">任务来源</span>
-          <input type="text" class="inp_origin" value="一路一档信息管理系统" />
+          <input type="text" class="inp_origin" value="一路一档信息管理系统" v-model="medname"/>
         </div>
         <div class="top_des_04">
           <span class="des_name">案件等级</span>
@@ -47,6 +47,42 @@
           </div>
           <!-- <input type="textarea" class="inp_des" /> -->
         </div>
+        <!-- <div class="kong"></div>
+        <div class="top_des_03">
+          <span class="des_name">处理后</span>
+        </div>
+        <div class="top_des_03">
+          <span class="des_name">处理人</span>
+          <input
+            type="text"
+            class="inp_origin"
+            v-model="people"
+            placeholder="请输入处理人"
+            value="一路一档信息管理系统"
+          />
+        </div>
+        <div class="top_des_03">
+          <span class="des_name">问题原因</span>
+          <input
+            type="text"
+            class="inp_origin"
+            v-model="reason"
+            placeholder="请输入问题原因"
+            value="一路一档信息管理系统"
+          />
+        </div>
+        <div class="top_des_04">
+          <span class="des_name">处理意见</span>
+          <textarea width="100%" class="inp_des" v-model="Opinion"></textarea>
+        </div>
+        <div class="top_des_04">
+          <span class="des_name">附件</span>
+          <label class="des_img">
+            <input type="file" @change="fileChange" ref="file" style="display:none" />
+            <img src="/imgs/logo.jpg" alt ref="fileImg" />
+            <input type="hidden" v-model="imgValue" />
+          </label>
+        </div>-->
         <!-- <div class="btn">
           <button class="btn1">接单</button>
           <button class="btn2">取消</button>
@@ -74,6 +110,7 @@
 import Header from "../../components/Header";
 import esriLoader from "esri-loader";
 import { getCookie } from "../../components/cookie";
+import { MessageBox } from "mint-ui";
 import axios from "axios";
 export default {
   data() {
@@ -92,7 +129,9 @@ export default {
       describe: "",
       Opinion: "",
       imglink: "",
-      token: ""
+      token: "",
+      type: "",
+      medname:''
     };
   },
   components: {
@@ -162,25 +201,54 @@ export default {
       .catch(err => {
         console.error(err);
       });
-    axios
-      .get(
-        this.$store.state.urls + "way/inspectionRecord/selectOneInspectionById",
-        {
-          params: {
-            Authorization: this.token,
-            id: this.id
+    console.error(this.type);
+    if (this.type == "巡检任务") {
+      axios
+        .get(
+          this.$store.state.urls +
+            "way/inspectionRecord/selectOneInspectionById",
+          {
+            params: {
+              id: this.id
+            },
+            headers: {
+              Authorization: this.token
+            }
           }
-        }
-      )
-      .then(res => {
-        console.log(res);
-        this.name = res.data.data.username;
-        this.date = res.data.data.cycleExecuteTime;
-        this.describe = res.data.data.context;
-        this.Opinion = res.data.data.result;
-        this.imglink = this.$store.state.urls + res.data.data.link;
-        // this.newtasklist = res.data.data.records;
-      });
+        )
+        .then(res => {
+          console.log(res);
+          this.name = res.data.data.username;
+          this.date = res.data.data.cycleExecuteTime;
+          this.describe = res.data.data.context;
+          this.Opinion = res.data.data.result;
+          this.imglink = this.$store.state.urls + res.data.data.link;
+          // this.newtasklist = res.data.data.records;
+        });
+    } else {
+      axios
+        .get(
+          this.$store.state.urls +
+            "way/InspectionCaseMangement/mobileAcceptIsHandedDdetails",
+          {
+            params: {
+              cid: this.id
+            },
+            headers: {
+              Authorization: this.token
+            }
+          }
+        )
+        .then(res => {
+          console.log(res);
+          this.name = res.data.data.username;
+          this.date = res.data.data.cycleExecuteTime;
+          this.describe = res.data.data.context;
+          this.Opinion = res.data.data.result;
+          this.imglink = this.$store.state.urls + res.data.data.link;
+          // this.newtasklist = res.data.data.records;
+        });
+    }
   },
   methods: {
     onValuesChange(picker, values) {
@@ -199,6 +267,7 @@ export default {
   created() {
     this.token = getCookie("token");
     this.type = localStorage.getItem("type");
+    this.medname = localStorage.getItem("moduleName");
   }
 };
 </script>

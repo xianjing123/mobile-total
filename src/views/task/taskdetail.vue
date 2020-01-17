@@ -23,7 +23,7 @@
         </div>
         <div class="top_des_03">
           <span class="des_name">任务来源</span>
-          <input type="text" class="inp_origin" value="一路一档信息管理系统" />
+          <input type="text" class="inp_origin" value="一路一档信息管理系统" v-model="medname"/>
         </div>
         <div class="top_des_04">
           <span class="des_name">案件等级</span>
@@ -112,7 +112,8 @@ export default {
       Opinion: "",
       type: "",
       imglink: "",
-      cid: ""
+      cid: "",
+      medname:""
     };
   },
   components: {
@@ -191,8 +192,11 @@ export default {
             "way/inspectionRecord/selectOneInspectionById",
           {
             params: {
-              Authorization: this.token,
+             
               id: this.id
+            },
+            headers:{
+               Authorization: this.token,
             }
           }
         )
@@ -203,6 +207,7 @@ export default {
           this.describe = res.data.data.context;
           this.Opinion = res.data.data.result;
           this.imglink = this.$store.state.urls + res.data.data.link;
+         
           // this.newtasklist = res.data.data.records;
         });
     } else {
@@ -210,10 +215,13 @@ export default {
         .get(
           this.$store.state.urls +
             "way/InspectionCaseMangement/mobileAcceptTestDdetails",
-          {
+            {
             params: {
-              Authorization: this.token,
+             
               cid: this.id
+            },
+            headers: {
+ Authorization: this.token
             }
           }
         )
@@ -225,6 +233,7 @@ export default {
           this.Opinion = res.data.data.advice;
           this.imglink = this.$store.state.urls + res.data.data.link;
           this.cid = res.data.data.cid;
+  
           // this.newtasklist = res.data.data.records;
         });
     }
@@ -324,7 +333,10 @@ export default {
               params: {
                 // Authorization: this.token,
                 cid: this.cid
-              }
+              },
+               headers: {
+ Authorization: this.token
+            }
             }
           )
           .then(res => {
@@ -375,6 +387,7 @@ export default {
   created() {
     this.token = getCookie("token");
     this.type = localStorage.getItem("type");
+    this.medname = localStorage.getItem("moduleName");
   }
 };
 </script>

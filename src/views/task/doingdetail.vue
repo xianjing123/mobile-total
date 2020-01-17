@@ -7,7 +7,7 @@
         <img src="/imgs/logo.jpg" alt />
         <span class="top_tit">管道问题</span>
         <span class="top_adress">浙江省湖州市德清县科园路</span>
-        <span class="nav">更改位置</span>
+        <a href="https://uri.amap.com/marker?position=119.977401,30.54251&name=德清" class="nav">更改位置</a>
       </div>
       <div class="top_des">
         <div class="top_des_01">
@@ -124,6 +124,7 @@ import Header from "../../components/Header";
 import esriLoader from "esri-loader";
 import axios from "axios";
 import { getCookie } from "../../components/cookie";
+import { MessageBox } from "mint-ui";
 export default {
   data() {
     return {
@@ -211,9 +212,12 @@ export default {
         this.$store.state.urls + "way/inspectionRecord/selectOneInspectionById",
         {
           params: {
-            Authorization: this.token,
+            
             id: this.id
-          }
+          },
+           headers: {
+ Authorization: this.token
+            }
         }
       )
       .then(res => {
@@ -294,7 +298,7 @@ export default {
         .then(res => {
           console.log(res);
           if (res.data.code == "200") {
-            MessageBox("提示", "接单成功");
+            MessageBox("提示", "任务完成");
           }
           // console.log("res=>", res);
         });

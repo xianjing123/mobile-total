@@ -14,7 +14,7 @@
           :key="index1"
           @click="gotoDetails(item)"
         >
-          <img :src="item.img" alt />
+          <img :src="imgurl+item.link" alt />
           <span class="title">{{item.type}}</span>
           <span class="date_tit">派单时间</span>
           <span class="date">{{item.createTime}}</span>
@@ -43,7 +43,7 @@
             ]"
               id="task"
             >
-              <img :src="n.img" alt />
+              <img :src="imgurl+n.link" alt />
               <span class="title">{{n.type}}</span>
               <span class="date_tit">派单时间</span>
               <span class="date">{{n.createTime}}</span>
@@ -56,9 +56,9 @@
           class="task_list"
           v-for="(item,index2) in newtasklist3"
           :key="index2"
-          @click="successbtn(item.id)"
+          @click="successbtn(item)"
         >
-          <img :src="item.img" alt />
+          <img :src="imgurl+item.link" alt />
           <span class="title">{{item.type}}</span>
           <span class="date_tit">派单时间</span>
           <span class="date">{{item.createTime}}</span>
@@ -81,13 +81,15 @@ export default {
       newtasklist2: [],
       newtasklist3: [],
       token: "",
-      show: true
+      show: true,
+      imgurl:''
     };
   },
   components: {
     Header
   },
   mounted() {
+    this.imgurl=this.$store.state.urls
     axios
       .get(this.$store.state.urls + "way/inspectionRecord/selectTaskAll", {
         params: {
@@ -141,8 +143,10 @@ export default {
     },
     deleteSection1(n) {
       if (n.type == "巡检任务") {
+        localStorage.setItem("moduleName", n.moduleName);
         this.$router.push({ path: "/xundetail/" + n.id });
       } else {
+        localStorage.setItem("moduleName", n.moduleName);
         this.$router.push({ path: "/waydetail/" + n.id });
       }
 
@@ -150,10 +154,14 @@ export default {
     },
     gotoDetails(item) {
       localStorage.setItem("type", item.type);
+      localStorage.setItem("moduleName", item.moduleName);
       this.$router.push({ path: "/taskdetail/" + item.id });
     },
-    successbtn(id) {
-      this.$router.push({ path: "/successdeyail/" + id });
+    successbtn(item) {
+      //  console.log(item);
+      localStorage.setItem("type", item.type);
+      localStorage.setItem("moduleName", item.moduleName);
+      this.$router.push({ path: "/successdeyail/" + item.id });
     }
   },
   created() {

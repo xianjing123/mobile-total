@@ -7,7 +7,7 @@
         <img src="/imgs/logo.jpg" alt />
         <span class="top_tit">管道问题</span>
         <span class="top_adress">浙江省湖州市德清县科园路</span>
-        <span class="nav">导航</span>
+        <a href="https://uri.amap.com/marker?position=119.977401,30.54251&name=德清" class="nav">导航</a>
       </div>
       <div class="top_des">
         <div class="top_des_01">
@@ -22,7 +22,7 @@
         </div>
         <div class="top_des_03">
           <span class="des_name">任务来源</span>
-          <input type="text" class="inp_origin" value="一路一档信息管理系统" />
+          <input type="text" class="inp_origin" value="一路一档信息管理系统" v-model="medname"/>
         </div>
         <div class="top_des_04">
           <span class="des_name">案件描述</span>
@@ -120,6 +120,7 @@ import Header from "../../components/Header";
 import esriLoader from "esri-loader";
 import axios from "axios";
 import { getCookie } from "../../components/cookie";
+import { MessageBox } from "mint-ui";
 export default {
   data() {
     return {
@@ -145,7 +146,8 @@ export default {
       imglink: "",
       token: "",
       id: "",
-      imgValue: ""
+      imgValue: "",
+      medname:''
     };
   },
   components: {
@@ -223,9 +225,13 @@ export default {
           "way/InspectionCaseMangement/mobileAcceptTestDdetails",
         {
           params: {
-            Authorization: this.token,
+           
             cid: this.id
-          }
+          },
+           headers:{
+ Authorization: this.token
+            }
+          
         }
       )
       .then(res => {
@@ -300,7 +306,7 @@ export default {
         .then(res => {
           console.log(res);
           if (res.data.code == "200") {
-            MessageBox("提示", "接单成功");
+            MessageBox("提示", "任务完成");
           }
           // console.log("res=>", res);
         });
@@ -315,6 +321,7 @@ export default {
   created() {
     this.token = getCookie("token");
     this.type = localStorage.getItem("type");
+     this.medname = localStorage.getItem("moduleName");
   }
 };
 </script>
